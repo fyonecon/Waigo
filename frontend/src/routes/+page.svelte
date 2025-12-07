@@ -1,6 +1,6 @@
 <script>
 import {Events} from "@wailsio/runtime";
-import {WailsServices} from "../../bindings/datathink.top.Waigo";
+import {AppServicesForWindow} from "../../bindings/datathink.top.Waigo/internal/bootstrap";
 
 let name = '';
 let result = 'Please enter your name below 👇';
@@ -9,7 +9,7 @@ let time = 'Listening for Time event...';
 //
 function JSCallGo(key, data_dict){
     return new Promise(resolve => {
-        WailsServices.JSCallGo(key, data_dict).then((resultValue) => {
+      AppServicesForWindow.JSCallGo(key, data_dict).then((resultValue) => {
             resolve(resultValue);
         }).catch((error) => {
             console.error("JSCallGo=Error=", error);
@@ -27,18 +27,15 @@ function JSCallGo(key, data_dict){
 }
 
 //
-const key = "key1";
+const key1 = "test";
 const data_dict = {
   "data1": "11",
 };
-JSCallGo(key, data_dict).then(result=>{
-    console.log("js_call_go=", result);
+JSCallGo(key1, data_dict).then(result=>{
+    console.log("JSCallGo="+key1+"=", result);
 });
 
 
-Events.On('time', (timeValue) => {
-  time = timeValue.data;
-});
 </script>
 
 <div class="container">

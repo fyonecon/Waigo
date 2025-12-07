@@ -1,7 +1,7 @@
 package common
 
 import (
-	"datathink.top/internal"
+	"datathink.top.Waigo/internal"
 )
 
 // 设置一个会过期的临时数据

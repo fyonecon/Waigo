@@ -6,7 +6,7 @@ let name = '';
 let result = 'Please enter your name below 👇';
 let time = 'Listening for Time event...';
 
-//
+// js调用Go
 function JSCallGo(key, data_dict){
     return new Promise(resolve => {
       AppServicesForWindow.JSCallGo(key, data_dict).then((resultValue) => {
@@ -39,26 +39,5 @@ JSCallGo(key1, data_dict).then(result=>{
 </script>
 
 <div class="container">
-  <div>
-    <span data-wml-openURL="https://wails.io">
-      <img src="/wails.png" class="logo" alt="Wails logo"/>
-    </span>
-    <span data-wml-openURL="https://svelte.dev">
-      <img src="/svelte.svg" class="logo svelte" alt="Svelte logo"/>
-    </span>
-  </div>
-  <h1>Wails + Svelte</h1>
-  <div class="result">{result}</div>
-  <div class="card">
-    <div class="input-box">
-      <input class="input" bind:value={name} type="text" autocomplete="off"/>
-    </div>
-  </div>
-  <div class="footer">
-    <div><p>Click on the Wails logo to learn more</p></div>
-    <div><p>{time}</p></div>
-  </div>
+    <h2>Page</h2>
 </div>
-
-<style>
-</style>

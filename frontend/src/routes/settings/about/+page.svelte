@@ -1,0 +1,15 @@
+<script>
+	import { resolve } from '$app/paths';
+    import func from "$lib/common/func.js";
+    import About from "$lib/pages/settings/about/About.svelte";
+</script>
+
+<svelte:head>
+	<title>About</title>
+    <meta name="keywords" content="" />
+	<meta name="description" content="" />
+</svelte:head>
+
+<section class="section-main">
+    <About/>
+</section>

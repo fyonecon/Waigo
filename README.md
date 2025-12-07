@@ -12,6 +12,9 @@ Github：https://github.com/fyonecon/Waigo 。
 
 ```
 
+Python版请戳：https://github.com/fyonecon/Ginthon 。
+Python版视窗功能没有Golang版全，差异在于各自依赖的生态不同。
+
 ==============================
 
 （wails3的文档和实际代码区别较大，正在写）

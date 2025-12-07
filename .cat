@@ -2,4 +2,4 @@
 
 fyonecon
 
-Waigo是Golang写的桌面框架。
+Waigo是Golang写的桌面框架，基于Wails、GInvel等。

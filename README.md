@@ -1,10 +1,15 @@
 # Waigo是用Golang写的桌面框架
 ```text
-Go层基于：Wails3、Ginvel3
-前端使用：Svelte
-开发条件（🔥）：go1.25+、win10+、macOS12+
+Waigo基于Wails3、Ginvel3等。
+
+前端使用Svelte。
+
+开发条件（🔥）：go1.25+、win10+、macOS12+ 。
+
 （方+——爬说明，仅在Git——-h>ub发布，20251205）
-Github：https://github.com/fyonecon/Waigo
+
+Github：https://github.com/fyonecon/Waigo 。
+
 ```
 
 ==============================

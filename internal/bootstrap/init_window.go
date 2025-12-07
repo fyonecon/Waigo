@@ -42,7 +42,7 @@ func InitWindow(app *application.App) {
 			DisableFramelessWindowDecorations: false,
 		},
 		Linux: application.LinuxWindow{
-			Icon: kits.ICON,
+			Icon: kits.IconData,
 		},
 		//
 	})

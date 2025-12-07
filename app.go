@@ -34,7 +34,7 @@ func InitApp() {
 	app := application.New(application.Options{
 		Name:        "Waigo",
 		Description: "A demo of using raw HTML & CSS",
-		Icon:        kits.ICON,
+		Icon:        kits.IconData,
 		//
 		Services: []application.Service{
 			application.NewService(&bootstrap.AppServicesForWindow{}),

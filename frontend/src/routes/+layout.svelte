@@ -12,6 +12,8 @@
     import func from "$lib/common/func.js";
     import {afterNavigate, beforeNavigate} from "$app/navigation";
     import { browser, dev, building, version } from '$app/environment';
+	// import {WindowEventsJSCallGo} from "../../bindings/datathink.top.Waigo/internal/bootstrap";
+	import {Events} from "@wailsio/runtime";
 	import {AppServicesForWindow} from "../../bindings/datathink.top.Waigo/internal/bootstrap";
 
     // 重定向到自定义的404页面
@@ -67,12 +69,23 @@
 		// })
 
 		//
-
-		AppServicesForWindow.JSCallGo("test", {"data1": 1}).then((resultValue) => {
-			console.log(resultValue)
-		})
-
     });
+
+	AppServicesForWindow.JSCallGo("test", {"data1": 2}).then(res=>{
+		console.log(res);
+	})
+	AppServicesForWindow.Test().then(res=>{
+		console.log(res);
+	})
+
+	//
+	// GoRunJS（Emit传递参数到前端js）
+	Events.On("test", (result) => {
+	 	console.log("GoEmitToJS=", result.data);
+	});
+	Events.On("make_window_token", (result) => {
+		console.log("GoEmitToJS=", result.data);
+	});
 
 </script>
 

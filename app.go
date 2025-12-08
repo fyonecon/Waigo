@@ -60,11 +60,8 @@ func InitApp() {
 		//OnStartup: func(ctx context.Context) {
 		// 此方法 Wails (v3.0.0-alpha.41) 里无，但是文档有
 		//},
-		PostShutdown: func() {
-			fmt.Println("[Waigo-Log]", "打算关闭主程序，，，")
-		},
 		OnShutdown: func() {
-			fmt.Println("[Waigo-Log]", "关闭主程序。。。")
+			fmt.Println("[Waigo-Log]", "关闭了主程序。。。")
 		},
 	})
 

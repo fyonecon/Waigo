@@ -17,9 +17,14 @@ type AppServicesForWindow struct{}
 
 // JSCallGo js调用go
 func (asw *AppServicesForWindow) JSCallGo(key string, dataDict map[string]interface{}) map[string]interface{} {
-	fmt.Println("JSCallGo=", key, dataDict)
+	//fmt.Println("JSCallGo=")
 	var awd = window_controller.WindowController{}
 	return awd.ListJSCallGo(key, dataDict)
+}
+
+// Test js调用go
+func (asw *AppServicesForWindow) Test() string {
+	return "Test"
 }
 
 // InitWindow 运行子程序视窗

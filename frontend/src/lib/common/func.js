@@ -5,7 +5,6 @@ import { browser } from '$app/environment';
 import md5 from 'md5';
 import { setContext, getContext } from 'svelte';
 import config from "$lib/common/config.js";
-import {AppServicesForWindow} from "../../../bindings/datathink.top.Waigo/internal/bootstrap";
 
 // 复用函数
 const func = {
@@ -440,37 +439,37 @@ const func = {
         return temp.innerText || temp.textContent;
     },
     // js调用Go
-    js_call_go: function (key, data_dict){
-        return new Promise(resolve => {
-            try{
-                AppServicesForWindow.JSCallGo(key, data_dict).then((resultValue) => {
-                    resolve(resultValue);
-                }).catch((error) => {
-                    console.error("JSCallGo=Error=", error);
-                    resolve({
-                        "state": 0,
-                        "msg": "JSCallGo出错",
-                        "content": {
-                            "key": key,
-                            "data_dict": data_dict,
-                            "error": error,
-                        },
-                    });
-                });
-            }catch(e){
-                // import {AppServicesForWindow} from "../../bindings/datathink.top.Waigo/internal/bootstrap";
-                resolve({
-                    "state": 0,
-                    "msg": "JSCallGo无此方法：AppServicesForWindow",
-                    "content": {
-                        "key": key,
-                        "data_dict": data_dict,
-                        "error": error,
-                    },
-                });
-            }
-        });
-    }
+    // js_call_go: function (key, data_dict){
+    //     return new Promise(resolve => {
+    //         try{
+    //             WindowEventsJSCallGo.JSCallGo(key, data_dict).then((resultValue) => {
+    //                 resolve(resultValue);
+    //             }).catch((error) => {
+    //                 console.error("JSCallGo=Error=", error);
+    //                 resolve({
+    //                     "state": 0,
+    //                     "msg": "JSCallGo出错",
+    //                     "content": {
+    //                         "key": key,
+    //                         "data_dict": data_dict,
+    //                         "error": error,
+    //                     },
+    //                 });
+    //             });
+    //         }catch(e){
+    //             // import {AppServicesForWindow} from "../../bindings/datathink.top.Waigo/internal/bootstrap";
+    //             resolve({
+    //                 "state": 0,
+    //                 "msg": "JSCallGo无此方法：AppServicesForWindow",
+    //                 "content": {
+    //                     "key": key,
+    //                     "data_dict": data_dict,
+    //                     "error": error,
+    //                 },
+    //             });
+    //         }
+    //     });
+    // }
 
     //
 }

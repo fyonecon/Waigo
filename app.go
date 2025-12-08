@@ -34,7 +34,7 @@ func InitSYS() {
 	if state == 1 {
 		InitApp()
 	} else {
-		fmt.Println("XXX 系统自检失败 => ", msg, content)
+		fmt.Println("\nXXX 系统自检失败 => ", msg, content)
 	}
 }
 

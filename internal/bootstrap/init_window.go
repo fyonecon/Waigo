@@ -2,19 +2,23 @@ package bootstrap
 
 import (
 	"datathink.top.Waigo/internal"
+	"datathink.top.Waigo/internal/app_services"
 	"datathink.top.Waigo/internal/app_tray"
 	"datathink.top.Waigo/internal/app_window"
+	"datathink.top.Waigo/internal/app_window/window_controller"
 	"datathink.top.Waigo/internal/common/kits"
 	"fmt"
 	"github.com/wailsapp/wails/v3/pkg/application"
 	"io/fs"
+	"time"
 )
 
 type AppServicesForWindow struct{}
 
 // JSCallGo js调用go
 func (asw *AppServicesForWindow) JSCallGo(key string, dataDict map[string]interface{}) map[string]interface{} {
-	var awd = app_window.AppWindow{}
+	fmt.Println("JSCallGo=", key, dataDict)
+	var awd = window_controller.WindowController{}
 	return awd.ListJSCallGo(key, dataDict)
 }
 
@@ -68,6 +72,17 @@ func InitWindow(app *application.App, ginHTML fs.FS, ginFiles fs.FS) {
 	// Gin
 	go func() {
 		RunGin(app, window, ginHTML, ginFiles)
+	}()
+
+	// 周期服务
+	go func() {
+		// 启动周期定时器服务
+		ticker := time.NewTicker(6 * time.Second) // 周期12s（默认10s，建议在[2,3,4,5,6,10,12,15,20]这些数值调。此处如果调整了，则CycleEventStateXXi00s(i string)函数里面的判断也必须调整。）
+		asv := app_services.AppServices{}
+		for _ = range ticker.C {
+			asv.StartTimeInterval(internal.TIMEINTERVALNUM)
+			internal.TIMEINTERVALNUM++
+		}
 	}()
 
 	// Emit传递参数到前端js，前端必须接收

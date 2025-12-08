@@ -5,6 +5,7 @@ import (
 )
 
 // 全局变量
+var TIMEINTERVALNUM int64 = 0 // 周期计数
 var APP *application.App
 var WINDOW *application.WebviewWindow
 

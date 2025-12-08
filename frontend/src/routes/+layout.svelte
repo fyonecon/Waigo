@@ -12,6 +12,7 @@
     import func from "$lib/common/func.js";
     import {afterNavigate, beforeNavigate} from "$app/navigation";
     import { browser, dev, building, version } from '$app/environment';
+	import {AppServicesForWindow} from "../../bindings/datathink.top.Waigo/internal/bootstrap";
 
     // 重定向到自定义的404页面
     function watch_404(){
@@ -59,6 +60,17 @@
     // 页面装载完成后，只运行一次
     onMount(() => {
         func.console_log("onMount=", [browser, dev]);
+
+		//
+		// func.js_call_go("test", {}).then(result=>{
+		// 	console.log("js_call_go=", result);
+		// })
+
+		//
+
+		AppServicesForWindow.JSCallGo("test", {"data1": 1}).then((resultValue) => {
+			console.log(resultValue)
+		})
 
     });
 

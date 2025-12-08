@@ -194,7 +194,7 @@ func RunGin(app *application.App, window *application.WebviewWindow, ginHTML fs.
 	} else {
 		fmt.Println("Debug已开，显示Web日志")
 		gin.SetMode(gin.DebugMode)
-		fmt.Println("测试-File文件访问：", "http://127.0.0.1:"+ginPort+"/file/"+"test.txt")
+		fmt.Println("测试-File文件访问：", "http://127.0.0.1:"+ginPort+"/files/"+"test.txt")
 	}
 	// 创建Gin
 	httpServer := gin.Default()

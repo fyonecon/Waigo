@@ -5,6 +5,7 @@ import { browser } from '$app/environment';
 import md5 from 'md5';
 import { setContext, getContext } from 'svelte';
 import config from "$lib/common/config.js";
+import {AppServicesForWindow} from "../../../bindings/datathink.top.Waigo/internal/bootstrap";
 
 // 复用函数
 const func = {

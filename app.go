@@ -15,8 +15,18 @@ import (
 // made available to the frontend.
 // See https://pkg.go.dev/embed for more information.
 
+// 视图UI
+//
 //go:embed all:frontend/dist
 var assets embed.FS
+
+// 配套的Gin
+//
+//go:embed all:ginassets/html
+var ginHTML embed.FS
+
+//go:embed all:ginassets/files
+var ginFiles embed.FS
 
 // InitSYS 先检查系统运行环境
 func InitSYS() {
@@ -33,7 +43,7 @@ func InitApp() {
 	// 主程序App
 	app := application.New(application.Options{
 		Name:        "Waigo",
-		Description: "A demo of using raw HTML & CSS",
+		Description: "This is Waigo.",
 		Icon:        kits.IconData,
 		//
 		Services: []application.Service{
@@ -59,7 +69,7 @@ func InitApp() {
 	})
 
 	// 注册子程序window
-	bootstrap.InitWindow(app)
+	bootstrap.InitWindow(app, ginHTML, ginFiles)
 
 	// Run the application. This blocks until the application has been exited.
 	err := app.Run()

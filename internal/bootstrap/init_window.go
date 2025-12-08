@@ -1,11 +1,13 @@
 package bootstrap
 
 import (
+	"datathink.top.Waigo/internal"
 	"datathink.top.Waigo/internal/app_tray"
 	"datathink.top.Waigo/internal/app_window"
 	"datathink.top.Waigo/internal/common/kits"
 	"fmt"
 	"github.com/wailsapp/wails/v3/pkg/application"
+	"io/fs"
 )
 
 type AppServicesForWindow struct{}
@@ -17,7 +19,7 @@ func (asw *AppServicesForWindow) JSCallGo(key string, dataDict map[string]interf
 }
 
 // InitWindow 运行子程序视窗
-func InitWindow(app *application.App) {
+func InitWindow(app *application.App, ginHTML fs.FS, ginFiles fs.FS) {
 	fmt.Println("[Waigo-Log]", "启动主视窗的其它服务")
 
 	// 子程序window
@@ -47,6 +49,10 @@ func InitWindow(app *application.App) {
 		//
 	})
 
+	// 设置成全局变量
+	internal.APP = app
+	internal.WINDOW = window
+
 	// window
 	go func() {
 		aw := app_window.AppWindow{}
@@ -61,7 +67,7 @@ func InitWindow(app *application.App) {
 
 	// Gin
 	go func() {
-		RunGin(app, window)
+		RunGin(app, window, ginHTML, ginFiles)
 	}()
 
 	// Emit传递参数到前端js，前端必须接收

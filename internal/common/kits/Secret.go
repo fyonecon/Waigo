@@ -12,10 +12,10 @@ import (
 type Secret struct{}
 
 // 默认密钥
-const _SALT string = "2OZ4fYgV" // 默认密钥，占8字节
+const _SALT string = "2oZ5fYwG" // 默认密钥，占8字节
 
-// Encode 加密
-func (kits *Secret) Encode(text string, key string) string {
+// StringEncode 加密
+func (kits *Secret) StringEncode(text string, key string) string {
 	if len(key) != 8 {
 		key = _SALT
 	}
@@ -35,8 +35,8 @@ func (kits *Secret) Encode(text string, key string) string {
 	//return "//11"
 }
 
-// Decode 解密
-func (kits *Secret) Decode(text string, key string) string {
+// StringDecode 解密
+func (kits *Secret) StringDecode(text string, key string) string {
 	if len(key) != 8 {
 		key = _SALT
 	}

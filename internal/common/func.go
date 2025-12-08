@@ -3,7 +3,6 @@
 package common
 
 import (
-	"archive/zip"
 	"bytes"
 	"crypto/md5"
 	"datathink.top.Waigo/internal"
@@ -12,8 +11,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/bodgit/sevenzip"
-	"github.com/skratchdot/open-golang/open"
 	"io"
 	"math"
 	"math/rand"
@@ -23,6 +20,7 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
+	"path"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -30,26 +28,6 @@ import (
 	"strings"
 	"time"
 )
-
-// Encode 加密
-// 默认des，salt长度为8
-func Encode(text string, salt string) string {
-	sec := kits.Secret{}
-	if len(salt) < 8 {
-		salt += "FyIl2O23"
-	}
-	return sec.Encode(text, salt[0:8])
-}
-
-// Decode 解密
-// 默认des，salt长度为8
-func Decode(text string, salt string) string {
-	sec := kits.Secret{}
-	if len(salt) < 8 {
-		salt += "FyIl2O23"
-	}
-	return sec.Decode(text, salt[0:8])
-}
 
 // StringToInt string转int
 func StringToInt(_str string) int64 {
@@ -137,13 +115,13 @@ func Ping(url string, count int64) string {
 	//err := cmd.Run()
 	if IsMac() {
 		ping := "ping " + url + " -c " + _count
-		back, _ = RunMacShell(ping)
+		back, _ = kits.RunMacShell(ping)
 	} else if IsWin() {
 		ping := "ping " + url + " -n " + _count
-		back, _ = RunWinShell(ping)
+		back, _ = kits.RunWinShell(ping)
 	} else {
 		ping := "ping " + url + " -c " + _count
-		back, _ = RunMacShell(ping)
+		back, _ = kits.RunMacShell(ping)
 	}
 	endTime := GetTimeMS()
 	spendTime := (endTime - startTime) / count / 10 // 平局耗时, ms
@@ -254,8 +232,8 @@ func GetFileLastDirName(file string) string {
 	}
 }
 
-// HasFile 是否已存在文件/文件夹
-func HasFile(file string) (bool, int64) {
+// HasFileOrDir 是否已存在文件/文件夹
+func HasFileOrDir(file string) (bool, int64) {
 	f, err := os.Stat(file)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -421,104 +399,6 @@ func CopyDir(oldDirPath string, newDirPath string) error {
 	return err
 }
 
-// Unzip 解压zip到对应文件夹
-func Unzip(_file string, savePath string) error {
-	var back error = nil
-	// 打开 zip 文件
-	unfile, err1 := zip.OpenReader(_file)
-	if err1 != nil {
-		back = err1
-		fmt.Println("Unzip不能正确读取目标文件：", _file)
-	} else {
-		defer unfile.Close()
-		// 遍历 zip 中的文件
-		for _, f := range unfile.File {
-			filePath := savePath + f.Name
-			if f.FileInfo().IsDir() {
-				_ = os.MkdirAll(filePath, os.ModePerm)
-				continue
-			}
-			// 创建对应文件夹
-			err2 := os.MkdirAll(filepath.Dir(filePath), os.ModePerm)
-			if err2 != nil {
-				back = err2
-			} else {
-				// 解压到的目标文件
-				dstFile, err3 := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
-				if err3 != nil {
-					back = err3
-				} else {
-					file, err4 := f.Open()
-					if err4 != nil {
-						back = err4
-					} else {
-						// 写入到解压到的目标文件
-						_, err5 := io.Copy(dstFile, file)
-						if err5 != nil {
-							back = err5
-						} else {
-							back = nil
-						}
-					}
-					file.Close()
-				}
-				dstFile.Close()
-			}
-		}
-		//fmt.Println("Unzip完成：", _file)
-	}
-	return back
-}
-
-// Un7z 解压7z
-func Un7z(_file string, savePath string) error {
-	var back error = nil
-	// 打开 7z 文件
-	unfile, err1 := sevenzip.OpenReader(_file)
-	if err1 != nil {
-		back = err1
-		fmt.Println("Un7z不能正确读取目标文件：", _file, back)
-	} else {
-		defer unfile.Close()
-		// 遍历 zip 中的文件
-		for _, f := range unfile.File {
-			filePath := savePath + f.Name
-			if f.FileInfo().IsDir() {
-				_ = os.MkdirAll(filePath, os.ModePerm)
-				continue
-			}
-			// 创建对应文件夹
-			err2 := os.MkdirAll(filepath.Dir(filePath), os.ModePerm)
-			if err2 != nil {
-				back = err2
-			} else {
-				// 解压到的目标文件
-				dstFile, err3 := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
-				if err3 != nil {
-					back = err3
-				} else {
-					file, err4 := f.Open()
-					if err4 != nil {
-						back = err4
-					} else {
-						// 写入到解压到的目标文件
-						_, err5 := io.Copy(dstFile, file)
-						if err5 != nil {
-							back = err5
-						} else {
-							back = nil
-						}
-					}
-					file.Close()
-				}
-				dstFile.Close()
-			}
-		}
-		//fmt.Println("Un7z完成：", _file)
-	}
-	return back
-}
-
 // GetTimeDate 获取日期时间戳，s
 // Y年m月d号 H:i:s.MS.NS 星期W
 func GetTimeDate(_format string) (date string) {
@@ -672,81 +552,6 @@ func InterfaceToString(value interface{}) string {
 // InterfaceToInt interface{}，类似ValueInterfaceToInt
 func InterfaceToInt(value interface{}) int64 {
 	return StringToInt(fmt.Sprintf("%v", value))
-}
-
-// OpenURL 使用指定浏览器打开链接
-// browserName = "firefox" "msedge" "chrome" "safari"。Mac默认"safari"，Win默认"msedge"
-func OpenURL(url string, browserName string) string {
-	var err error
-	var back string
-	if IsMac() {
-		switch browserName {
-		case "chrome":
-			back, _ = RunMacShell(`open -a "/Applications/Google Chrome.app" '` + url + `'`)
-			break
-		case "chromebeta":
-			back, _ = RunMacShell(`open -a "/Applications/Google Chrome Beta.app" '` + url + `'`)
-			break
-		case "msedge":
-			back, _ = RunMacShell(`open -a "/Applications/Microsoft Edge.app" '` + url + `'`)
-			break
-		case "msedgebeta":
-			back, _ = RunMacShell(`open -a "/Applications/Microsoft Edge Beta.app" '` + url + `'`)
-			break
-		case "firefox":
-			back, _ = RunMacShell(`open -a "/Applications/Firefox.app" '` + url + `'`)
-			break
-		case "brave":
-			back, _ = RunMacShell(`open -a "/Applications/Brave.app" '` + url + `'`)
-			break
-		case "opera":
-			back, _ = RunMacShell(`open -a "/Applications/Opera.app" '` + url + `'`)
-			break
-		case "qqbrowser":
-			back, _ = RunMacShell(`open -a "/Applications/QQBrowser.app" '` + url + `'`)
-			break
-		case "360chrome": // 360极速浏览器
-			back, _ = RunMacShell(`open -a "/Applications/360Chrome.app" '` + url + `'`)
-			break
-
-		default: // Mac平台使用默认浏览器
-			back, _ = RunMacShell(`open -a "/Applications/Safari.app" '` + url + `'`)
-		}
-	} else if IsWin() {
-		switch browserName {
-		case "chrome":
-			back, _ = RunWinShell(`start chrome ` + url)
-			break
-		case "msedge":
-			back, _ = RunWinShell(`start msedge ` + url)
-			break
-		case "firefox":
-			back, _ = RunWinShell(`start firefox ` + url)
-			break
-		case "brave":
-			back, _ = RunWinShell(`start brave ` + url)
-			break
-		case "opera":
-			back, _ = RunWinShell(`start opera ` + url)
-			break
-		case "qqbrowser":
-			back, _ = RunWinShell(`start qqbrowser ` + url)
-			break
-		case "360safebrowser": // 360安全浏览器
-			back, _ = RunWinShell(`start 360se6 ` + url)
-			break
-
-		default: // Win平台使用默认浏览器
-			back, _ = RunWinShell(`start msedge ` + url)
-		}
-	} else {
-		err = open.Start(url)
-	}
-	if err != nil {
-		fmt.Print("OpenURL报错：", err, " ")
-		back = "Error"
-	}
-	return back
 }
 
 // StringStrip 字符串只留下数字、字母、下划线
@@ -1000,19 +805,6 @@ func MD5(_string string) string {
 	return fmt.Sprintf("%x", md.Sum(nil))
 }
 
-//// LocalNetCard 获取本机所有网卡名
-//func LocalNetCard() ([]string, error) {
-//	var netCard []string
-//	devices, err := pcap.FindAllDevs()
-//	if err != nil {
-//		return netCard, err
-//	}
-//	for _, d := range devices {
-//		netCard = append(netCard, d.Name)
-//	}
-//	return netCard, nil
-//}
-
 // LocalIPv4 获取本地局域网IPv4地址
 // 优先级：127.0.0.1 > 192.168 > 172. > 10. > (169.254、0.0.0.0)
 func LocalIPv4() ([]string, error) {
@@ -1176,45 +968,6 @@ func GoRand(min int64, max int64) int64 {
 	return rand.Int63n(max-min+1) + min
 }
 
-// MakeURLTimeout 创建一个url_timeout参数
-// timeout时间段（比如 10mins、2days、1year），单位 s
-func MakeURLTimeout(timeout int64, salt string) string {
-	appClass := InterfaceToString(internal.ConfigMap["appClass"])
-
-	if len(salt) < 1 {
-		salt = MD5("default#" + InterfaceToString(internal.GetGlobalMapInterface(appClass+"login_id")))
-	}
-	if timeout < 30 { // min=30秒
-		timeout = 30
-	} else if timeout > 5*12*30*24*60*60 { // max=5年
-		timeout = 5 * 12 * 30 * 24 * 60 * 60
-	}
-	//
-	beforeTime := GetTimeDate("YmdHis")
-	afterTime := TimeSToDate(GetTimeS()+timeout, "YmdHis")
-	userID := InterfaceToString(internal.GetGlobalMapInterface(InterfaceToString(internal.ConfigMap["appClass"]) + "login_id"))
-	userPWD := InterfaceToString(internal.GetGlobalMapInterface(InterfaceToString(internal.ConfigMap["appClass"]) + "login_pwd"))
-	//appUID := InterfaceToString(internal.GetGlobalMapInterface(InterfaceToString(internal.ConfigMap["appClass"]) + "app_uid"))
-	saltID := MD5(appClass + "##" + userID + "##" + userPWD + "##" + salt)
-	//
-	newTime := saltID + "#@" + beforeTime + "#@" + afterTime + "#@" + MD5(IntToString(GoRand(10000000000, 9999999999999)))
-	return strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(Encode(newTime, salt), "+", "_@-"), "=", "_@_"), "%", "__@"), "#", "_-@")
-}
-
-// FilterPath 过滤特殊路径中的特殊字符
-func FilterPath(path string) string {
-	path = strings.ReplaceAll(path, "/", "@@")
-	path = strings.ReplaceAll(path, "\\", "@@")
-	path = strings.ReplaceAll(path, "*", "-")
-	path = strings.ReplaceAll(path, "|", "-")
-	path = strings.ReplaceAll(path, ":", "-")
-	path = strings.ReplaceAll(path, "?", "_")
-	path = strings.ReplaceAll(path, "<", "'")
-	path = strings.ReplaceAll(path, ">", "'")
-	path = strings.ReplaceAll(path, " ", "_")
-	return path
-}
-
 // StringToFloat string转float64
 func StringToFloat(str string) float64 {
 	fl, err := strconv.ParseFloat(str, 64)
@@ -1223,4 +976,15 @@ func StringToFloat(str string) float64 {
 	} else {
 		return fl
 	}
+}
+
+// GetFileContentType 获取文件类型
+func GetFileContentType(filename string) string {
+	fileExt := path.Ext(filename) //后缀
+	fileExt = strings.ToLower(fileExt)
+	fileContentType := kits.FileContentTypeDict[fileExt]
+	if len(fileContentType) == 0 {
+		fileContentType = "application/octet-stream"
+	}
+	return fileContentType
 }

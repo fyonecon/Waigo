@@ -1,4 +1,4 @@
-# Waigo是用Golang写的桌面框架
+# Waigo是用Golang写的“视图窗口+稳定服务”的桌面端多功能程序基建
 ```text
 Waigo基于Wails3、Ginvel3等。
 

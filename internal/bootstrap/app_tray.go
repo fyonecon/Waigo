@@ -1,7 +1,7 @@
 package bootstrap
 
 import (
-	"datathink.top.Waigo/internal/app_tray"
+	"datathink.top/Waigo/internal/app_tray"
 	"fmt"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )

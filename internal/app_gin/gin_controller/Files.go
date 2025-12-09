@@ -1,7 +1,7 @@
 package gin_controller
 
 import (
-	"datathink.top.Waigo/internal/common"
+	"datathink.top/Waigo/internal/common"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"

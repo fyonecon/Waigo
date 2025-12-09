@@ -1,7 +1,7 @@
 package app_tray
 
 import (
-	"datathink.top.Waigo/internal/common/kits"
+	"datathink.top/Waigo/internal/common/kits"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 

@@ -12,9 +12,9 @@
     import func from "$lib/common/func.js";
     import {afterNavigate, beforeNavigate} from "$app/navigation";
     import { browser, dev, building, version } from '$app/environment';
-	// import {WindowEventsJSCallGo} from "../../bindings/datathink.top.Waigo/internal/bootstrap";
+	// import {WindowEventsJSCallGo} from "../../bindings/datathink.top/Waigo/internal/bootstrap";
 	import {Events} from "@wailsio/runtime";
-	import {AppServicesForWindow} from "../../bindings/datathink.top.Waigo/internal/bootstrap";
+	import {AppServicesForWindow} from "../../bindings/datathink.top/Waigo/internal/bootstrap";
 
     // 重定向到自定义的404页面
     function watch_404(){

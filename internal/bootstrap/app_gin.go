@@ -1,9 +1,9 @@
 package bootstrap
 
 import (
-	"datathink.top.Waigo/internal"
-	"datathink.top.Waigo/internal/app_gin"
-	"datathink.top.Waigo/internal/common"
+	"datathink.top/Waigo/internal"
+	"datathink.top/Waigo/internal/app_gin"
+	"datathink.top/Waigo/internal/common"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/wailsapp/wails/v3/pkg/application"

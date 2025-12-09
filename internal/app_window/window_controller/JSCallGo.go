@@ -1,8 +1,8 @@
 package window_controller
 
 import (
-	"datathink.top.Waigo/internal"
-	"datathink.top.Waigo/internal/common"
+	"datathink.top/Waigo/internal"
+	"datathink.top/Waigo/internal/common"
 )
 
 // ListJSCallGo js调用go方法的对照表

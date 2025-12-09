@@ -1,8 +1,8 @@
 package app_gin
 
 import (
-	"datathink.top.Waigo/internal"
-	"datathink.top.Waigo/internal/common"
+	"datathink.top/Waigo/internal"
+	"datathink.top/Waigo/internal/common"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"

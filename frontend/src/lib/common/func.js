@@ -457,7 +457,7 @@ const func = {
     //                 });
     //             });
     //         }catch(e){
-    //             // import {AppServicesForWindow} from "../../bindings/datathink.top.Waigo/internal/bootstrap";
+    //             // import {AppServicesForWindow} from "../../bindings/datathink.top/Waigo/internal/bootstrap";
     //             resolve({
     //                 "state": 0,
     //                 "msg": "JSCallGo无此方法：AppServicesForWindow",

@@ -1,9 +1,9 @@
 package window_controller
 
 import (
-	"datathink.top.Waigo/internal"
-	"datathink.top.Waigo/internal/common"
-	"datathink.top.Waigo/internal/common/kits"
+	"datathink.top/Waigo/internal"
+	"datathink.top/Waigo/internal/common"
+	"datathink.top/Waigo/internal/common/kits"
 	"fmt"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )

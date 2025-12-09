@@ -1,8 +1,8 @@
 package main
 
 import (
-	"datathink.top.Waigo/internal/bootstrap"
-	"datathink.top.Waigo/internal/common/kits"
+	"datathink.top/Waigo/internal/bootstrap"
+	"datathink.top/Waigo/internal/common/kits"
 	"embed"
 	_ "embed"
 	"fmt"

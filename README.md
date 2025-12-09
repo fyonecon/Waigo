@@ -34,7 +34,12 @@ Python版视窗功能没有Golang版全，差异在于各自依赖的生态不�
 ### 运行效果：
 ![运行效果](./show.png)
 
-### Wails3新项目搭建
+### Wails3新项目搭建:
+0.安装wails3:
+> go install github.com/wailsapp/wails/v3/cmd/wails3@latest
+> 
+> wails3 doctor
+
 1.查看支持哪些前端框架：
 > wails3 init -l
 
@@ -44,5 +49,12 @@ Python版视窗功能没有Golang版全，差异在于各自依赖的生态不�
 3.运行：
 > wails3 dev
 
+### Golang环境搭建:
+开启mod模式:
+> go env -w GO111MODULE=on
+
+go get大陆地区代理： 
+
+> go env -w GOPROXY=https://goproxy.cn,https://goproxy.io,direct
 
 ### 2025-12-05

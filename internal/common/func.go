@@ -5,8 +5,8 @@ package common
 import (
 	"bytes"
 	"crypto/md5"
-	"datathink.top.Waigo/internal"
-	kits "datathink.top.Waigo/internal/common/kits"
+	"datathink.top/Waigo/internal"
+	kits "datathink.top/Waigo/internal/common/kits"
 	"encoding/base64"
 	"encoding/json"
 	"errors"

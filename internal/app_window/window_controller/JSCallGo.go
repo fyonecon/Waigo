@@ -13,7 +13,6 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 	var content = map[string]interface{}{
 		"key":       key,
 		"data_dict": dataDict,
-		"result":    "",
 	}
 	// 必要 ===
 	if key == "test" || key == "Test" {
@@ -23,7 +22,17 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 		content = map[string]interface{}{
 			"key":       key,
 			"data_dict": dataDict,
-			"result":    "TEST is OK",
+		}
+	} else if key == "stop_go_run_js_for_make_window_token" {
+		stateNum := common.InterfaceToInt(internal.GetConfigSetter("make_window_token_state"))
+		internal.SetConfigSetter("make_window_token_state", int64(stateNum+1))
+		//
+		state = 1
+		msg = "Stop Emit"
+		content = map[string]interface{}{
+			"key":       key,
+			"data_dict": dataDict,
+			"state_num": stateNum,
 		}
 	} else if key == "window_show" {
 		internal.WINDOW.Show()
@@ -34,7 +43,6 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 		content = map[string]interface{}{
 			"key":       key,
 			"data_dict": dataDict,
-			"result":    "",
 		}
 	} else if key == "window_hide" {
 		internal.WINDOW.Hide()
@@ -44,7 +52,6 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 		content = map[string]interface{}{
 			"key":       key,
 			"data_dict": dataDict,
-			"result":    "",
 		}
 	} else if key == "window_title" {
 		title := common.InterfaceToString(dataDict["title"])
@@ -62,7 +69,6 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 			"key":       key,
 			"title":     title,
 			"data_dict": dataDict,
-			"result":    "",
 		}
 	} else if key == "open_url_with_default_browser" {
 		url := common.InterfaceToString(dataDict["url"])
@@ -73,7 +79,6 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 			content = map[string]interface{}{
 				"key":       key,
 				"data_dict": dataDict,
-				"result":    "",
 			}
 		} else {
 			state = 1
@@ -81,7 +86,6 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 			content = map[string]interface{}{
 				"key":       key,
 				"data_dict": dataDict,
-				"result":    "",
 			}
 		}
 	} else if key == "open_url_with_master_window" {
@@ -93,7 +97,6 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 		content = map[string]interface{}{
 			"key":       key,
 			"data_dict": dataDict,
-			"result":    "",
 		}
 	} else if key == "open_url_with_new_window" {
 		//
@@ -102,7 +105,6 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 		content = map[string]interface{}{
 			"key":       key,
 			"data_dict": dataDict,
-			"result":    "",
 		}
 	} else {
 		state = 0
@@ -110,7 +112,6 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 		content = map[string]interface{}{
 			"key":       key,
 			"data_dict": dataDict,
-			"result":    "Others",
 		}
 	}
 	return map[string]interface{}{

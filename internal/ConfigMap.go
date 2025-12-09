@@ -36,9 +36,16 @@ var ConfigMap map[string]interface{} = map[string]interface{}{
 		"localPath":         "top.datathink.Wailgo/Files/", // 缓存文件夹，必须/结尾
 	},
 	"gin": map[string]interface{}{
-		"ginDebug":    "on",   // on 显示Gin日志，off 不显示Gin日志
-		"ginPort":     "9850", // 内网端口，默认：9850
-		"maxFileSize": "32",   // 最大上传文件体积，GB
+		"ginDebug":        "on",     // on 显示Gin日志，off 不显示Gin日志
+		"ginPort":         "9850",   // 内网端口，默认：9850
+		"maxFileSize":     "32",     // 最大上传文件体积，GB
+		"windowTokenSalt": "NbPlus", //
+		"whiteHosts": []string{
+			"http://127.0.0.1:9850",
+			"https://127.0.0.1:9850",
+			"http://datathink.top",
+			"https://datathink.top",
+		}, //
 	},
 	"wails": map[string]interface{}{
 		"debug": "off",

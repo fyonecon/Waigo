@@ -493,19 +493,30 @@ func StringHasString(bigString string, minString string) int64 {
 }
 
 // ArrayHasString 数组中含有某字符串
-func ArrayHasString(array []string, sub string) bool {
+func ArrayHasString(array []string, value string) bool {
 	for _, e := range array {
-		if e == sub {
+		if e == value {
 			return true
 		}
 	}
 	return false
 }
 
-// ArrayHasInt 数组中含有某数值
-func ArrayHasInt(array []int64, sub int64) bool {
+// ArrayInString array里面的值在字符串里面(包含)
+func ArrayInString(array []string, bigStr string) int64 {
 	for _, e := range array {
-		if e == sub {
+		index := strings.Index(bigStr, e)
+		if index != -1 {
+			return int64(index)
+		}
+	}
+	return -1
+}
+
+// ArrayHasInt 数组中含有某数值
+func ArrayHasInt(array []int64, value int64) bool {
+	for _, e := range array {
+		if e == value {
 			return true
 		}
 	}
@@ -740,6 +751,15 @@ func InterfaceToMap(inter interface{}) map[string]interface{} {
 	}
 }
 
+// InterfaceToArrayString interface{}转[]string{}，前提是格式分布格式是[]string{}
+func InterfaceToArrayString(inter interface{}) []string {
+	if inter == nil {
+		return nil
+	} else {
+		return inter.([]string)
+	}
+}
+
 // StaticTwoNumber 固定输出2位数字长度
 func StaticTwoNumber(str string) string {
 	_str := StringToInt(str)
@@ -966,6 +986,20 @@ func CycleEventState00s() bool {
 func GoRand(min int64, max int64) int64 {
 	rand.Seed(time.Now().UnixNano())
 	return rand.Int63n(max-min+1) + min
+}
+
+// GoRandString 获取长度范围内的随机字母数字
+func GoRandString(minLen int64, maxLen int64) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-%"
+	rand.Seed(time.Now().UnixNano() + int64(rand.Intn(1000)))
+	// 随机确定长度
+	length := GoRand(minLen, maxLen)
+	// 生成字符串
+	result := make([]byte, length)
+	for i := int64(0); i < length; i++ {
+		result[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(result)
 }
 
 // StringToFloat string转float64

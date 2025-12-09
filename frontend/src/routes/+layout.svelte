@@ -15,6 +15,28 @@
 	// import {WindowEventsJSCallGo} from "../../bindings/datathink.top/Waigo/internal/bootstrap";
 	import {Events} from "@wailsio/runtime";
 	import {AppServicesForWindow} from "../../bindings/datathink.top/Waigo/internal/bootstrap";
+	import config from "$lib/common/config.js";
+
+	// GoRunJS写入token，用于验证js_call_go
+	Events.On("make_window_token", (result) => {
+		const info = func.string_to_json(result.data);
+		const app_class = config.app.app_class;
+		// 设置新的
+		const window_token = info.content["windowToken"];
+		const window_token_timer = func.get_time_s_date("YmdHis");
+		func.set_local_data(app_class+"window_token", window_token)
+		func.set_local_data(app_class+"window_token_timer", window_token_timer)
+		//
+		const key = "stop_go_run_js_for_make_window_token";
+		const data_dict = {};
+		func.js_call_go(key, data_dict).then(res=>{
+			if (res.state === 1){ // 成功
+				console.log("[func.js_call_go]",res);
+			}else{
+				console.log(res.msg)
+			}
+		});
+	});
 
     // 重定向到自定义的404页面
     function watch_404(){
@@ -62,30 +84,16 @@
     // 页面装载完成后，只运行一次
     onMount(() => {
         func.console_log("onMount=", [browser, dev]);
-
+		// 其它
 		//
-		// func.js_call_go("test", {}).then(result=>{
-		// 	console.log("js_call_go=", result);
-		// })
-
+		AppServicesForWindow.JSCallGo("test", {"data1": 2}).then(res=>{
+			console.log(res);
+		})
+		AppServicesForWindow.Test().then(res=>{
+			console.log(res);
+		})
 		//
     });
-
-	AppServicesForWindow.JSCallGo("test", {"data1": 2}).then(res=>{
-		console.log(res);
-	})
-	AppServicesForWindow.Test().then(res=>{
-		console.log(res);
-	})
-
-	//
-	// GoRunJS（Emit传递参数到前端js）
-	Events.On("test", (result) => {
-	 	console.log("GoEmitToJS=", result.data);
-	});
-	Events.On("make_window_token", (result) => {
-		console.log("GoEmitToJS=", result.data);
-	});
 
 </script>
 

@@ -3,8 +3,6 @@ package window_controller
 import (
 	"datathink.top/Waigo/internal"
 	"datathink.top/Waigo/internal/common"
-	"datathink.top/Waigo/internal/common/kits"
-	"fmt"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
@@ -30,24 +28,34 @@ func init() {
 //	});
 func (awd *WindowController) ListGoRunJS(key string, dataDict map[string]interface{}) {
 	//
-	if dataDict == nil {
-		dataDict = map[string]interface{}{
-			"key":       key,
-			"ddataDict": dataDict,
-			"error":     "空值",
-		}
+	//
+	var state = 0
+	var msg = ""
+	var content = map[string]interface{}{
+		"key":       key,
+		"data_dict": dataDict,
 	}
-	dataJSONString := common.MapToJsonString(dataDict) // dataStr只能是string，可能是Emit函数的Bug
-	fmt.Println("ListGoRunJS=", key, dataDict, dataJSONString)
 	//
 	if key == "test" || key == "Test" {
-		internal.APP.Event.Emit(key, dataJSONString)
+		state = 1
+		msg = "OK Test"
+		content["dataTest"] = "test data 123"
 	} else if key == "make_window_token" {
-		secret := kits.Secret{}
-		windowToken := secret.StringEncode("123", "")
-		internal.APP.Event.Emit(key, windowToken)
+		state = 1
+		msg = "已生成"
+		windowTokenSalt := common.InterfaceToString(internal.GetConfigMap("gin", "windowTokenSalt"))
+		windowToken := common.MakeRandToken(windowTokenSalt, 7*365*24*60*60)
+		content["windowToken"] = windowToken
 	} else {
-		fmt.Println("ListGoRunJS=else=", dataDict)
-		internal.APP.Event.Emit(key, dataJSONString)
+		state = 0
+		msg = "无白名单key"
 	}
+	//
+	dataJSONString := common.MapToJsonString(map[string]interface{}{
+		"state":   state,
+		"msg":     msg,
+		"content": content,
+	}) // dataStr只能是string，可能是Emit函数的Bug
+	//fmt.Println("ListGoRunJS=", key, dataDict, dataJSONString)
+	internal.APP.Event.Emit(key, dataJSONString)
 }

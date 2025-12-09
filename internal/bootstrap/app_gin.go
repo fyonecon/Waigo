@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"datathink.top/Waigo/internal"
 	"datathink.top/Waigo/internal/app_gin"
+	"datathink.top/Waigo/internal/app_window/window_controller"
 	"datathink.top/Waigo/internal/common"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -29,6 +30,7 @@ func RouteMust(route *gin.Engine, ginHTML fs.FS, ginFiles fs.FS) {
 	// 默认路由，api
 	// 如：http://127.0.0.1:9850
 	route.Any("/", mdw.HttpCorsApi, mdw.HttpError500, func(ctx *gin.Context) {
+		test := common.RequestInput(ctx, "test")
 		ctx.JSON(http.StatusOK, gin.H{
 			"state": 1,
 			"msg":   "YES",
@@ -36,6 +38,7 @@ func RouteMust(route *gin.Engine, ginHTML fs.FS, ginFiles fs.FS) {
 				"appName":    appName,
 				"appVersion": "v" + appVersion,
 				"appRights":  appRights,
+				"test":       test,
 			},
 		})
 		return
@@ -44,6 +47,7 @@ func RouteMust(route *gin.Engine, ginHTML fs.FS, ginFiles fs.FS) {
 	// 默认路由，api
 	// 如：http://127.0.0.1:9850/api
 	route.Any("/api", mdw.HttpCorsApi, mdw.HttpError500, func(ctx *gin.Context) {
+		test := common.RequestInput(ctx, "test")
 		ctx.JSON(http.StatusOK, gin.H{
 			"state": 1,
 			"msg":   "YES API",
@@ -51,6 +55,7 @@ func RouteMust(route *gin.Engine, ginHTML fs.FS, ginFiles fs.FS) {
 				"appName":    appName,
 				"appVersion": "v" + appVersion,
 				"appRights":  appRights,
+				"test":       test,
 			},
 		})
 		return
@@ -160,6 +165,46 @@ func RouteMust(route *gin.Engine, ginHTML fs.FS, ginFiles fs.FS) {
 		//
 		ctx.Header("Content-Type", fileType)
 		io.Copy(ctx.Writer, theFile) // 流式传输
+		return
+	})
+
+	// 重写js_call_go
+	// 如：http://127.0.0.1:9850/api/js_call_go
+	route.Any("/api/js_call_go", mdw.HttpCorsApi, mdw.HttpError500, func(ctx *gin.Context) {
+		//
+		_appClass := common.RequestInput(ctx, "app_class")
+		_appVersion := common.RequestInput(ctx, "app_version")
+		//
+		_windowToken := common.RequestInput(ctx, "window_token")
+		windowTokenSalt := common.InterfaceToString(internal.GetConfigMap("gin", "windowTokenSalt"))
+		windowTokenState := common.CheckRandToken(windowTokenSalt, _windowToken)
+		//
+		_apiURL := common.RequestFullURL(ctx) // 完整访问域名
+		whiteHosts := internal.GetConfigMap("gin", "whiteHosts")
+		apiURLState := common.ArrayInString(common.InterfaceToArrayString(whiteHosts), _apiURL) != -1
+		//
+		key := common.RequestInput(ctx, "key")
+		_dataDict := common.RequestInput(ctx, "data_dict")
+		dataDict := common.JsonStringToMap(_dataDict)
+		//
+		//fmt.Println("js_call_go=", _windowToken, windowTokenState, _apiURL, apiURLState)
+		//
+		if windowTokenState && apiURLState { // 校验通过就返回对照表
+			//fmt.Println("api/js_call_go=", key, dataDict)
+			var awd = window_controller.WindowController{}
+			ctx.JSON(http.StatusOK, awd.ListJSCallGo(key, dataDict))
+		} else {
+			ctx.JSON(http.StatusOK, gin.H{
+				"state": 0,
+				"msg":   "参数错误或过期",
+				"content": map[string]interface{}{
+					"windowToken": _windowToken,
+					"whiteHosts":  whiteHosts,
+					"appClass":    _appClass,
+					"appVersion":  "v" + _appVersion,
+				},
+			})
+		}
 		return
 	})
 

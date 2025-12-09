@@ -48,4 +48,5 @@ func init() {
 	// 子程序参数
 	SetConfigSetter("sys_start_time", int64(0))
 	SetConfigSetter("max_file_size", int64(20))
+	SetConfigSetter("make_window_token_state", int64(0)) // 0可继续，1停止运行
 }

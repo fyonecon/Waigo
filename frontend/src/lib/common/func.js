@@ -5,6 +5,7 @@ import { browser } from '$app/environment';
 import md5 from 'md5';
 import { setContext, getContext } from 'svelte';
 import config from "$lib/common/config.js";
+// import {AppServicesForWindow} from "../../bindings/datathink.top/Waigo/internal/bootstrap";
 
 // 复用函数
 const func = {
@@ -438,38 +439,114 @@ const func = {
         temp.innerHTML = html;
         return temp.innerText || temp.textContent;
     },
-    // js调用Go
-    // js_call_go: function (key, data_dict){
-    //     return new Promise(resolve => {
-    //         try{
-    //             WindowEventsJSCallGo.JSCallGo(key, data_dict).then((resultValue) => {
-    //                 resolve(resultValue);
-    //             }).catch((error) => {
-    //                 console.error("JSCallGo=Error=", error);
-    //                 resolve({
-    //                     "state": 0,
-    //                     "msg": "JSCallGo出错",
-    //                     "content": {
-    //                         "key": key,
-    //                         "data_dict": data_dict,
-    //                         "error": error,
-    //                     },
-    //                 });
-    //             });
-    //         }catch(e){
-    //             // import {AppServicesForWindow} from "../../bindings/datathink.top/Waigo/internal/bootstrap";
-    //             resolve({
-    //                 "state": 0,
-    //                 "msg": "JSCallGo无此方法：AppServicesForWindow",
-    //                 "content": {
-    //                     "key": key,
-    //                     "data_dict": data_dict,
-    //                     "error": error,
-    //                 },
-    //             });
-    //         }
-    //     });
-    // }
+    // js调用Go（API法）
+    js_call_go: function (key, data_dict){
+        let that = this;
+        // js远程调用
+        const js_call_go_request = function (api_url, body_dict) {
+            // 基础 POST 请求
+            async function FetchPOST(url, data) {
+                const config = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: typeof data === 'string' ? data : JSON.stringify(data),
+                    mode: 'cors', // cors, no-cors, same-origin
+                    cache: 'no-cache', // default, no-cache, reload, force-cache, only-if-cached
+                    timeout: 4, // 自定义超时 s
+                };
+                try {
+                    const response = await fetch(url, config);
+                    // 检查响应状态
+                    if (!response.ok) {
+                        // throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        return {
+                            "state": 0,
+                            "msg": "请求失败1",
+                            "content": {
+                                "body_dict": body_dict,
+                                "error status": response.status,
+                                "error text": response.statusText,
+                            }
+                        };
+                    }else{
+                        // 根据 Content-Type 解析响应
+                        const contentType = response.headers.get('content-type');
+                        let result;
+                        if (contentType && contentType.includes('application/json')) {
+                            result = await response.json();
+                        } else if (contentType && contentType.includes('text/')) {
+                            result = await response.text();
+                        } else if (contentType && contentType.includes('form-data')) {
+                            result = await response.formData();
+                        } else if (contentType && contentType.includes('blob')) {
+                            result = await response.blob();
+                        } else {
+                            result = await response.text();
+                        }
+                        return result;
+                    }
+                } catch (error) {
+                    console.error('Fetch error 1:', error);
+                    return {
+                        "state": 0,
+                        "msg": "请求失败2",
+                        "content": {
+                            "data_dict": body_dict,
+                            "error": error,
+                        }
+                    };
+                }
+            }
+            //
+            return new Promise(resolve => {
+                try {
+                    FetchPOST(api_url+"?cache="+that.get_time_ms(), body_dict).then(result=>{
+                        resolve(result);
+                    });
+                } catch (error) {
+                    console.error('Fetch error 2:', error);
+                    resolve({
+                        "state": 0,
+                        "msg": "请求失败3",
+                        "content": {
+                            "body_dict": body_dict,
+                            "error": error,
+                        }
+                    });
+                }
+            });
+        };
+        //
+        return new Promise(resolve => {
+            const _app_class = config.app.app_class;
+            const _app_version = config.app.app_version;
+            let api_url = config.api.js_call_go_url+"api/js_call_go";
+            let body_dict = {
+                "window_token": that.get_local_data(_app_class+"window_token"),
+                "key": key,
+                "data_dict": data_dict,
+                "app_class": _app_class,
+                "app_version": _app_version,
+            }
+            try{
+                js_call_go_request(api_url, body_dict).then(res=>{
+                    resolve(res);
+                })
+            }catch(e){
+                resolve({
+                    "state": 0,
+                    "msg": "JSCallGo无此方法：AppServicesForWindow",
+                    "content": {
+                        "key": key,
+                        "body_dict": body_dict,
+                    },
+                });
+            }
+        });
+    },
+    //
 
     //
 }

@@ -16,8 +16,10 @@ const _SALT string = "2oZ5fYwG" // 默认密钥，占8字节
 
 // StringEncode 加密
 func (kits *Secret) StringEncode(text string, key string) string {
-	if len(key) != 8 {
+	if len(key) < 8 {
 		key = _SALT
+	} else {
+		key = key[:8]
 	}
 	defer func() { // 跳过致命错误使程序继续运行
 		if e := recover(); e != nil {
@@ -37,8 +39,10 @@ func (kits *Secret) StringEncode(text string, key string) string {
 
 // StringDecode 解密
 func (kits *Secret) StringDecode(text string, key string) string {
-	if len(key) != 8 {
+	if len(key) < 8 {
 		key = _SALT
+	} else {
+		key = key[:8]
 	}
 	defer func() { // 跳过致命错误使程序继续运行
 		if e := recover(); e != nil {
@@ -55,7 +59,7 @@ func (kits *Secret) StringDecode(text string, key string) string {
 	//return "//22"
 }
 
-// ======
+// ====================================
 
 // SCEncrypt DES加密
 func SCEncrypt(originalBytes, key []byte, scType string) ([]byte, error) {

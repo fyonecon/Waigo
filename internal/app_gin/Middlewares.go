@@ -1,15 +1,65 @@
 package app_gin
 
 import (
+	"bytes"
 	"datathink.top/Waigo/internal"
 	"datathink.top/Waigo/internal/common"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"io"
 	"net/http"
 	"runtime"
 )
 
 type Middlewares struct{}
+
+// OPTIONSToPOST 将OPTIONS转成POST
+func OPTIONSToPOST(ctx *gin.Context) {
+	if ctx.Request.Method == "OPTIONS" {
+		// 1. 记录原始请求信息
+		originalMethod := ctx.Request.Method
+		//originalURL := ctx.Request.URL.String()
+
+		// 2. 修改请求方法为POST
+		ctx.Request.Method = "POST"
+
+		// 3. 添加特殊请求头标识这是转换的请求
+		ctx.Request.Header.Set("X-Original-Method", originalMethod)
+		ctx.Request.Header.Set("X-Request-Type", "OPTIONS-Forwarded")
+
+		// 4. 如果有请求体，保持不变；如果没有，可添加空请求体
+		if ctx.Request.Body == nil || ctx.Request.Body == http.NoBody {
+			// 为空请求体设置一个空的JSON体（可选）
+			emptyBody := []byte(`{"_options_forward": true}`)
+			ctx.Request.Body = io.NopCloser(bytes.NewBuffer(emptyBody))
+			ctx.Request.ContentLength = int64(len(emptyBody))
+			ctx.Request.Header.Set("Content-Type", "application/json; charset=utf-8")
+		}
+
+		// 5. 设置响应头（预检请求响应）
+		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		ctx.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		ctx.Writer.Header().Set("Access-Control-Allow-Headers", "*")
+		//ctx.Writer.Header().Set("Access-Control-Max-Age", "86400")
+
+		// 6. 记录日志
+		//gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
+		//	return fmt.Sprintf("[OPTIONS→POST] %s %s -> %s %d %s\n",
+		//		originalMethod, originalURL,
+		//		ctx.Request.Method, param.StatusCode, param.Latency)
+		//})
+
+		// 7. 继续处理（现在会匹配POST路由）
+		ctx.Next()
+
+		// 8. 在响应中添加标识
+		if ctx.Writer.Status() != http.StatusOK {
+			ctx.Header("X-OPTIONS-Forwarded", "true")
+		}
+	} else {
+		ctx.Next()
+	}
+}
 
 // CheckRequestApi 验证请求
 func (mdw *Middlewares) CheckRequestApi(ctx *gin.Context) {
@@ -124,9 +174,11 @@ func (mdw *Middlewares) HttpCorsApi(ctx *gin.Context) { // 面向Api
 	ctx.Header("Content-Disposition", "inline")
 	// 二请
 	if method == "OPTIONS" {
-		ctx.AbortWithStatus(http.StatusNoContent)
+		//ctx.AbortWithStatus(http.StatusNoContent)
+		OPTIONSToPOST(ctx)
+	} else {
+		ctx.Next()
 	}
-	ctx.Next()
 }
 
 // HttpCorsFiles 处理http-header信息
@@ -146,8 +198,9 @@ func (mdw *Middlewares) HttpCorsFiles(ctx *gin.Context) { // 面向Api
 	// 二请
 	if method == "OPTIONS" {
 		ctx.AbortWithStatus(http.StatusNoContent)
+	} else {
+		ctx.Next()
 	}
-	ctx.Next()
 }
 
 // HttpCorsHTML 处理http-header信息
@@ -165,7 +218,9 @@ func (mdw *Middlewares) HttpCorsHTML(ctx *gin.Context) { // 面向Api
 	ctx.Header("Content-Disposition", "inline")
 	// 二请
 	if method == "OPTIONS" {
-		ctx.AbortWithStatus(http.StatusNoContent)
+		//ctx.AbortWithStatus(http.StatusNoContent)
+		OPTIONSToPOST(ctx)
+	} else {
+		ctx.Next()
 	}
-	ctx.Next()
 }

@@ -30,7 +30,9 @@ Golang版基座请戳：https://github.com/fyonecon/Waigo 。
 
 ### 官方文档：
 （⚠️注意wails3的文档和实际代码区别较大，效果以实际代码为准。）
-> 文档：https://v3alpha.wails.io/quick-start/installation/
+> wails：https://v3alpha.wails.io/quick-start/installation/
+> 
+> gin：https://gin-gonic.com/zh-cn/docs/
 
 ### 项目结构：
 ```text

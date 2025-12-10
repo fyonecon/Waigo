@@ -139,8 +139,6 @@ go get大陆地区代理：
 > wails3 dev
 
 ### 打包成桌面可运行程序包：
-```text
-（正在测试）
-```
+> 请参考：https://v3alpha.wails.io/guides/build/building/
 
 ### 2025-12-05

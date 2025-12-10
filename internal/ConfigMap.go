@@ -30,8 +30,8 @@ var ConfigMap map[string]interface{} = map[string]interface{}{
 		"appVersion": "1.1.0",         // AppVersion
 	},
 	"sys": map[string]interface{}{
-		"appStateStartTime": 20251201010101,                // 最早时间
-		"appStateEndTime":   20321201010101,                // 截止时间，一个版本：7年
+		"appStateStartTime": 20251201010101,                // 最早时间 YmdHis
+		"appStateEndTime":   20341201010101,                // 截止时间，一个版本：9年。（这是软件及扩展更新的要求）
 		"cachePath":         "top.datathink.Wailgo/Cache/", // 缓存文件夹，必须/结尾
 		"localPath":         "top.datathink.Wailgo/Files/", // 缓存文件夹，必须/结尾
 	},

@@ -1,6 +1,8 @@
 package bootstrap
 
 import (
+	"datathink.top/Waigo/internal"
+	"datathink.top/Waigo/internal/common"
 	"runtime"
 )
 
@@ -9,18 +11,26 @@ type CheckSYS struct {
 
 // InitCheckSYS 系统运行条件检测
 func InitCheckSYS() (int64, string, map[string]interface{}) {
-	// 检查逻辑CPU数量
-	minCPUs := 2 // 个逻辑CPU
-	numCPUs := runtime.NumCPU()
-	cpuState := numCPUs >= minCPUs
 	//
 	state := 0
 	msg := ""
 	content := map[string]interface{}{
 		"error": "",
 	}
-	//
-	if cpuState {
+
+	// 检查逻辑CPU数量
+	minCPUs := 2 // 个逻辑CPU
+	numCPUs := runtime.NumCPU()
+	cpuState := numCPUs >= minCPUs
+
+	// 检测强制更新时间（这是软件及扩展更新的要求）
+	startTime := common.InterfaceToInt(internal.GetConfigMap("sys", "appStateStartTime"))
+	endTime := common.InterfaceToInt(internal.GetConfigMap("sys", "appStateEndTime"))
+	nowTime := common.StringToInt(common.GetTimeDate("YmdHis"))
+	timeState := (nowTime >= startTime) && (nowTime <= endTime)
+
+	// 判断
+	if cpuState && timeState {
 		state = 1
 		msg = "系统检测通告"
 		content = map[string]interface{}{
@@ -32,6 +42,7 @@ func InitCheckSYS() (int64, string, map[string]interface{}) {
 		content = map[string]interface{}{
 			"error":   "",
 			"numCPUs": numCPUs,
+			"nowTime": nowTime,
 		}
 	}
 	//

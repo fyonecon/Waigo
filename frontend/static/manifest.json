@@ -1,6 +1,6 @@
 {
-  "name": "Ginthon",
-  "short_name": "Ginthon",
+  "name": "Waigo",
+  "short_name": "Waigo",
   "start_url": "./index.html#route=home&from=&utm_source=pwa",
   "display": "standalone",
   "background_color": "#fefefe",

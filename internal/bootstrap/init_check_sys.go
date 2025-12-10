@@ -31,6 +31,9 @@ func InitCheckSYS() (int64, string, map[string]interface{}) {
 
 	// 判断
 	if cpuState && timeState {
+		// 生成本次软件运行的唯一ID
+		internal.RUNNNINGID = common.GoRandString(64, 128)
+		//
 		state = 1
 		msg = "系统检测通告"
 		content = map[string]interface{}{

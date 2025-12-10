@@ -4,7 +4,7 @@ import { page } from '$app/state';
 import { browser } from '$app/environment';
 import md5 from 'md5';
 import { setContext, getContext } from 'svelte';
-import config from "$lib/common/config.js";
+import config from "$lib/config.js";
 // import {AppServicesForWindow} from "../../bindings/datathink.top/Waigo/internal/bootstrap";
 
 // 复用函数
@@ -439,11 +439,11 @@ const func = {
         temp.innerHTML = html;
         return temp.innerText || temp.textContent;
     },
-    // js调用Go（API法）
-    js_call_go: function (key, data_dict){
+    // js调用PY或GO（API法），兼容
+    js_call_py_or_go: function (key, data_dict){
         let that = this;
         // js远程调用
-        const js_call_go_request = function (api_url, body_dict) {
+        const post_request = function (api_url, body_dict) {
             // 基础 POST 请求
             async function FetchPOST(url, data) {
                 const config = {
@@ -520,30 +520,92 @@ const func = {
         };
         //
         return new Promise(resolve => {
+            const sys_backend = config.sys.backend; // go、py
             const _app_class = config.app.app_class;
             const _app_version = config.app.app_version;
-            let api_url = config.api.js_call_go_url+"api/js_call_go";
+            //
+            let api_url = "";
+            let window_token = "";
+            if (sys_backend === "py"){
+                try {
+                    api_url = js_call_py_api + "/" + js_call_py_auth;
+                }catch (e) {
+                    try {
+                        api_url = config.api.js_call_py_url+"api/js_call_py";
+                    }catch (e) {
+                        console.log("-值未获得-py-")
+                    }
+                }
+                window_token = that.get_local_data("window_token");
+            }else if (sys_backend === "go"){
+                api_url = config.api.js_call_go_url+"api/js_call_go";
+                window_token = that.get_local_data(_app_class+"window_token");
+            }else{
+                resolve({
+                    "state": 0,
+                    "msg": "config参数错误",
+                    "content": {
+                        "key": key,
+                        "body_dict": {},
+                    },
+                });
+                return
+            }
+            //
             let body_dict = {
-                "window_token": that.get_local_data(_app_class+"window_token"),
+                "window_token": window_token,
                 "key": key,
                 "data_dict": data_dict,
                 "app_class": _app_class,
                 "app_version": _app_version,
             }
+            //
             try{
-                js_call_go_request(api_url, body_dict).then(res=>{
+                post_request(api_url, body_dict).then(res=>{
                     resolve(res);
                 })
             }catch(e){
                 resolve({
                     "state": 0,
-                    "msg": "JSCallGo无此方法：AppServicesForWindow",
+                    "msg": "JSCallX无此方法",
                     "content": {
                         "key": key,
                         "body_dict": body_dict,
                     },
                 });
             }
+        });
+    },
+    js_watch_window_display: function (){ // 显示还是隐藏窗口的状态的判断
+        let that = this;
+
+        // // 检查当前页面是否隐藏（最小化或切换标签页）
+        // const isMinimized = document.hidden;
+        // // 或者使用 visibilityState
+        // const isVisible = document.visibilityState === 'visible';
+        // const isHidden = document.visibilityState === 'hidden';
+        // 添加事件监听器
+        document.addEventListener('visibilitychange', () => {
+            let display = "hiding";
+            if (document.hidden) {
+                display = "hiding";
+            } else {
+                display = "showing";
+            }
+
+            //
+            const sys_backend = config.sys.backend; // go、py
+            if (sys_backend === "py"){
+                //
+                try{
+                    that.js_call_py_or_go("window_display", {"display": display}).then(
+                        back_data=>{
+                            console.log("[视窗JS-Log]", "js_call_py.py返回值：", back_data);
+                        }
+                    );
+                }catch(e){}
+            }
+
         });
     },
     //

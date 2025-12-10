@@ -15,7 +15,7 @@
 	// import {WindowEventsJSCallGo} from "../../bindings/datathink.top/Waigo/internal/bootstrap";
 	import {Events} from "@wailsio/runtime";
 	import {AppServicesForWindow} from "../../bindings/datathink.top/Waigo/internal/bootstrap";
-	import config from "$lib/common/config.js";
+	import config from "$lib/config.js";
 
 	// GoRunJS写入token，用于验证js_call_go
 	Events.On("make_window_token", (result) => {
@@ -29,7 +29,7 @@
 		//
 		const key = "stop_go_run_js_for_make_window_token";
 		const data_dict = {};
-		func.js_call_go(key, data_dict).then(res=>{
+		func.js_call_py_or_go(key, data_dict).then(res=>{
 			if (res.state === 1){ // 成功
 				console.log("[func.js_call_go]",res);
 			}else{
@@ -84,6 +84,8 @@
     // 页面装载完成后，只运行一次
     onMount(() => {
         func.console_log("onMount=", [browser, dev]);
+		func.js_watch_window_display(); // 监测窗口是否隐藏
+
 		// 其它
 		//
 		AppServicesForWindow.JSCallGo("test", {"data1": 2}).then(res=>{

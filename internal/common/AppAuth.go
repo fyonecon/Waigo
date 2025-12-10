@@ -56,3 +56,17 @@ func CheckRandToken(salt string, checkString string) bool {
 		return false
 	}
 }
+
+// MakeRandID 每次软件运行的唯一ID
+func MakeRandID() string {
+	appClass := InterfaceToString(internal.GetConfigMap("app", "appClass"))
+	runningID := internal.RUNNNINGID
+	return MD5(appClass + runningID)
+}
+
+// CheckRandID 每次软件运行的唯一ID
+func CheckRandID(checkStr string) bool {
+	appClass := InterfaceToString(internal.GetConfigMap("app", "appClass"))
+	runningID := internal.RUNNNINGID
+	return checkStr == MD5(appClass+runningID)
+}

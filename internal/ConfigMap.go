@@ -5,6 +5,7 @@ import (
 )
 
 // 全局变量
+var RUNNNINGID = ""           // 本次软件启动携带的唯一性ID
 var TIMEINTERVALNUM int64 = 0 // 周期计数
 var APP *application.App
 var WINDOW *application.WebviewWindow

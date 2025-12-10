@@ -27,7 +27,7 @@ var ConfigMap map[string]interface{} = map[string]interface{}{
 		"appName":    "Waigo",         // AppName，推荐使用英文
 		"appClass":   "Waigo_",        // 必须为string，且必须唯一，推荐使用英文
 		"appRights":  "Datathink.Top", // AppRights，也是软件安装默认路径
-		"appVersion": "1.1.0",         // AppVersion
+		"appVersion": "1.2.0",         // AppVersion
 	},
 	"sys": map[string]interface{}{
 		"appStateStartTime": 20251201010101,                // 最早时间 YmdHis
@@ -37,7 +37,7 @@ var ConfigMap map[string]interface{} = map[string]interface{}{
 	},
 	"gin": map[string]interface{}{
 		"ginDebug":        "on",     // on 显示Gin日志，off 不显示Gin日志
-		"ginPort":         "9850",   // 内网端口，默认：9850
+		"ginPort":         "9850",   // 内网+外网端口（非wails服务），默认：9850
 		"maxFileSize":     "32",     // 最大上传文件体积，GB
 		"windowTokenSalt": "NbPlus", //
 		"whiteHosts": []string{
@@ -45,7 +45,7 @@ var ConfigMap map[string]interface{} = map[string]interface{}{
 			"https://127.0.0.1:9850",
 			"http://datathink.top",
 			"https://datathink.top",
-		}, //
+		}, // 白名单域名或IP，格式：协议+IPv4+port、协议+域名
 	},
 	"wails": map[string]interface{}{
 		"debug": "off",

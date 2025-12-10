@@ -2,8 +2,8 @@ package bootstrap
 
 import (
 	"datathink.top/Waigo/internal"
-	"datathink.top/Waigo/internal/app_gin"
-	"datathink.top/Waigo/internal/app_window/window_controller"
+	"datathink.top/Waigo/internal/app/app_gin"
+	"datathink.top/Waigo/internal/app/app_window/window_controller"
 	"datathink.top/Waigo/internal/common"
 	"fmt"
 	"github.com/gin-gonic/gin"

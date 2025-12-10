@@ -2,10 +2,10 @@ package bootstrap
 
 import (
 	"datathink.top/Waigo/internal"
-	"datathink.top/Waigo/internal/app_services"
-	"datathink.top/Waigo/internal/app_tray"
-	"datathink.top/Waigo/internal/app_window"
-	"datathink.top/Waigo/internal/app_window/window_controller"
+	"datathink.top/Waigo/internal/app/app_services"
+	"datathink.top/Waigo/internal/app/app_tray"
+	"datathink.top/Waigo/internal/app/app_window"
+	"datathink.top/Waigo/internal/app/app_window/window_controller"
 	"datathink.top/Waigo/internal/common/kits"
 	"fmt"
 	"github.com/wailsapp/wails/v3/pkg/application"

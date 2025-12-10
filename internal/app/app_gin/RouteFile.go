@@ -1,7 +1,7 @@
 package app_gin
 
 import (
-	"datathink.top/Waigo/internal/app_gin/gin_controller"
+	"datathink.top/Waigo/internal/app/app_gin/gin_controller"
 	"github.com/gin-gonic/gin"
 	"io/fs"
 )

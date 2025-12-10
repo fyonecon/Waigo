@@ -2,7 +2,7 @@ package app_window
 
 import (
 	"datathink.top/Waigo/internal"
-	"datathink.top/Waigo/internal/app_window/window_controller"
+	"datathink.top/Waigo/internal/app/app_window/window_controller"
 	"datathink.top/Waigo/internal/common"
 	"fmt"
 	"github.com/wailsapp/wails/v3/pkg/application"
@@ -13,7 +13,7 @@ import (
 func (awd *AppWindow) WindowView(app *application.App, window *application.WebviewWindow) {
 	fmt.Println("WindowView=")
 
-	// 启动周期定时器服务
+	// 启动周期定时器服务，实现向web端写入数据
 	ticker := time.NewTicker(2 * time.Second) // 周期2s
 	num := 0                                  // 计数
 	for _ = range ticker.C {

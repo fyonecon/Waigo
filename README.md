@@ -52,28 +52,29 @@ Waigo-Main
 ├── go.mod
 ├── go.sum
 ├── internal 框架逻辑
-│   ├── app_gin 服务：Gin
-│   │   ├── gin_controller
-│   │   │   ├── Files.go
-│   │   │   └── init.go 空间命名的Struct
-│   │   ├── init.go 空间命名的Struct
-│   │   ├── Middlewares.go
-│   │   ├── RouteAPI.go
-│   │   ├── RouteFile.go
-│   │   └── RouteHTML.go
-│   ├── app_services 服务：定时器等
-│   │   ├── init.go 空间命名的Struct
-│   │   └── TimeInterval.go
-│   ├── app_tray 服务：状态栏托盘
-│   │   ├── init.go 空间命名的Struct
-│   │   └── Tray.go
-│   ├── app_window 服务：Wails主视图相关
-│   │   ├── init.go 空间命名的Struct
-│   │   ├── window_controller
-│   │   │   ├── GoRunJS.go Go调用JS
+│   ├── app 自定义程序
+│   │   ├── app_gin 服务：Gin
+│   │   │   ├── gin_controller
+│   │   │   │   ├── Files.go
+│   │   │   │   └── init.go 空间命名的Struct
 │   │   │   ├── init.go 空间命名的Struct
-│   │   │   └── JSCallGo.go JS调用GO
-│   │   └── Window.go
+│   │   │   ├── Middlewares.go
+│   │   │   ├── RouteAPI.go
+│   │   │   ├── RouteFile.go
+│   │   │   └── RouteHTML.go
+│   │   ├── app_services 服务：定时器等
+│   │   │   ├── init.go 空间命名的Struct
+│   │   │   └── TimeInterval.go
+│   │   ├── app_tray 服务：状态栏托盘
+│   │   │   ├── init.go 空间命名的Struct
+│   │   │   └── Tray.go
+│   │   ├── app_window 服务：Wails主视图相关
+│   │   │   ├── init.go 空间命名的Struct
+│   │   │   ├── window_controller
+│   │   │   │   ├── GoRunJS.go Go调用JS
+│   │   │   │   ├── init.go 空间命名的Struct
+│   │   │   │   └── JSCallGo.go JS调用GO
+│   │   │   └── Window.go
 │   ├── bootstrap 框架逻辑的实现（服务启动）
 │   │   ├── app_gin.go
 │   │   ├── app_tray.go

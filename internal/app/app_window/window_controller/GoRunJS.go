@@ -37,14 +37,16 @@ func (awd *WindowController) ListGoRunJS(key string, dataDict map[string]interfa
 	}
 	//
 	if key == "test" || key == "Test" {
+		//
 		state = 1
 		msg = "OK Test"
 		content["dataTest"] = "test data 123"
 	} else if key == "make_window_token" {
-		state = 1
-		msg = "已生成"
 		windowTokenSalt := common.InterfaceToString(internal.GetConfigMap("gin", "windowTokenSalt"))
 		windowToken := common.MakeRandToken(windowTokenSalt, 7*365*24*60*60)
+		//
+		state = 1
+		msg = "已生成"
 		content["windowToken"] = windowToken
 	} else {
 		state = 0

@@ -103,7 +103,7 @@ Waigo-Main
 ```
 
 ### 运行效果：
-![运行效果](./show.png)
+![运行效果](./frontend/show.png)
 
 ### Golang环境搭建:
 ```text

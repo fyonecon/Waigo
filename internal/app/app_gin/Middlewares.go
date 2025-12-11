@@ -170,7 +170,7 @@ func (mdw *Middlewares) HttpCorsApi(ctx *gin.Context) { // 面向Api
 	ctx.Header("Framework-Author", "fyonecon")
 	ctx.Header("Date", common.GetTimeDate("Y-m-d H:i:s"))
 	//是否允许后续请求携带认证信息,该值只能是true,否则不返回
-	ctx.Header("Access-Control-Allow-Credentials", "true")
+	//ctx.Header("Access-Control-Allow-Credentials", "true") // 不能与*一起使用
 	ctx.Header("Content-Disposition", "inline")
 	// 二请
 	if method == "OPTIONS" {
@@ -192,7 +192,7 @@ func (mdw *Middlewares) HttpCorsFiles(ctx *gin.Context) { // 面向Api
 	ctx.Header("Framework-Author", "fyonecon")
 	ctx.Header("Date", common.GetTimeDate("Y-m-d H:i:s"))
 	//是否允许后续请求携带认证信息,该值只能是true,否则不返回
-	ctx.Header("Access-Control-Allow-Credentials", "true")
+	//ctx.Header("Access-Control-Allow-Credentials", "true") // 不能与*一起使用
 	//ctx.Header("Content-Disposition", "attachment")
 	ctx.Header("Content-Disposition", "inline")
 	// 二请
@@ -214,7 +214,7 @@ func (mdw *Middlewares) HttpCorsHTML(ctx *gin.Context) { // 面向Api
 	ctx.Header("Framework-Author", "fyonecon")
 	ctx.Header("Date", common.GetTimeDate("Y-m-d H:i:s"))
 	//是否允许后续请求携带认证信息,该值只能是true,否则不返回
-	ctx.Header("Access-Control-Allow-Credentials", "true")
+	//ctx.Header("Access-Control-Allow-Credentials", "true") // 不能与*一起使用
 	ctx.Header("Content-Disposition", "inline")
 	// 二请
 	if method == "OPTIONS" {

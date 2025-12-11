@@ -42,8 +42,8 @@ var ConfigMap map[string]interface{} = map[string]interface{}{
 		"maxFileSize":     "32",     // 最大上传文件体积，GB
 		"windowTokenSalt": "NbPlus", //
 		"whiteHosts": []string{
-			"http://127.0.0.1:9850",
-			"https://127.0.0.1:9850",
+			"http://127.0.0.1",
+			"https://127.0.0.1",
 			"http://datathink.top",
 			"https://datathink.top",
 		}, // 白名单域名或IP，格式：协议+IPv4+port、协议+域名

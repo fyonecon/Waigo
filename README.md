@@ -139,6 +139,41 @@ go get大陆地区代理：
 > wails3 dev
 
 ### 打包成桌面可运行程序包：
-> 请参考：https://v3alpha.wails.io/guides/build/building/
+请参考：https://v3alpha.wails.io/guides/build/building/ 。
+
+推荐真机打包对应软件架构版本，因为一些依赖在各个平台下运行不一致。
+
+打包后的软件在”/Waigo/bin“目录。
+
+Windows平台：
+> 
+> wails3 build GOOS=darwin GOARCH=amd64
+> 
+> wails3 build GOOS=darwin GOARCH=arm64
+
+macOS平台：
+> 
+> wails3 build GOOS=windows GOARCH=amd64
+> 
+> wails3 build GOOS=windows GOARCH=arm64
+
+Linux平台：
+> 
+> wails3 build GOOS=linux GOARCH=amd64
+> 
+> wails3 build GOOS=linux GOARCH=arm64
+> 
+
+### 针对Mac中.app文件打开时显示“软件已损坏”问题
+```
+1.1 在Mac的终端输入命令行：sudo spctl --master-disable
+1.2 然后输入你的Mac锁屏密码，回车确认。
+1.3 打开设置----隐私与安全----安全----勾选“任何来源”。
+2. 安装xxx.app软件到Mac的应用文件夹里。
+3.1 在Mac终端输入命令行：sudo xattr -r -d com.apple.quarantine /Applications/xxx.app
+3.2 然后输入你的Mac锁屏密码，回车确认。
+4. OK了。
+```
+
 
 ### 2025-12-05

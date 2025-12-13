@@ -102,6 +102,37 @@ Waigo-Main
 
 ```
 
+### 运行项目
+>
+> wails3 dev
+>
+
+### 打包成桌面可运行程序包：
+请参考：https://v3alpha.wails.io/guides/build/building/ 。
+
+推荐真机打包对应软件架构版本，因为一些依赖在各个平台下运行不一致。
+
+打包后的软件在”/Waigo/bin“目录。
+
+Windows平台：
+> 
+> wails3 build GOOS=darwin GOARCH=amd64
+> 
+> wails3 build GOOS=darwin GOARCH=arm64
+
+macOS平台：
+> 
+> wails3 build GOOS=windows GOARCH=amd64
+> 
+> wails3 build GOOS=windows GOARCH=arm64
+
+Linux平台：
+> 
+> wails3 build GOOS=linux GOARCH=amd64
+> 
+> wails3 build GOOS=linux GOARCH=arm64
+> 
+
 ### 运行效果：
 ![运行效果](./frontend/show.png)
 
@@ -137,32 +168,6 @@ go get大陆地区代理：
 
 3.运行：
 > wails3 dev
-
-### 打包成桌面可运行程序包：
-请参考：https://v3alpha.wails.io/guides/build/building/ 。
-
-推荐真机打包对应软件架构版本，因为一些依赖在各个平台下运行不一致。
-
-打包后的软件在”/Waigo/bin“目录。
-
-Windows平台：
-> 
-> wails3 build GOOS=darwin GOARCH=amd64
-> 
-> wails3 build GOOS=darwin GOARCH=arm64
-
-macOS平台：
-> 
-> wails3 build GOOS=windows GOARCH=amd64
-> 
-> wails3 build GOOS=windows GOARCH=arm64
-
-Linux平台：
-> 
-> wails3 build GOOS=linux GOARCH=amd64
-> 
-> wails3 build GOOS=linux GOARCH=arm64
-> 
 
 ### 针对Mac中.app文件打开时显示“软件已损坏”问题
 ```

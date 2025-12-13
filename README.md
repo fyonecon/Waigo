@@ -13,7 +13,9 @@ Python版基座请戳：https://github.com/fyonecon/Ginthon 。
 
 Golang版基座请戳：https://github.com/fyonecon/Waigo 。
 
-### 程序目标：
+---
+
+### 程序要求：
 ```
 需要 go1.24+
 
@@ -28,10 +30,42 @@ Golang版基座请戳：https://github.com/fyonecon/Waigo 。
 ### 拉取项目：
 > git clone -b main https://github.com/fyonecon/Waigo.git Waigo-Main
 
+### 运行项目:
+下面命令已经内置包含npm install、go mod tidy。
+>
+> wails3 dev
+>
+
+### 打包成桌面可运行程序包：
+请参考：https://v3alpha.wails.io/guides/build/building/ 。
+
+推荐真机打包对应软件架构版本，因为一些依赖在各个平台下运行不一致。
+
+打包后的软件在”/Waigo/bin“目录。
+
+Windows平台：
+>
+> wails3 build GOOS=darwin GOARCH=amd64
+>
+> wails3 build GOOS=darwin GOARCH=arm64
+
+macOS平台：
+>
+> wails3 build GOOS=windows GOARCH=amd64
+>
+> wails3 build GOOS=windows GOARCH=arm64
+
+Linux平台：
+>
+> wails3 build GOOS=linux GOARCH=amd64
+>
+> wails3 build GOOS=linux GOARCH=arm64
+>
+
 ### 官方文档：
 （⚠️注意wails3的文档和实际代码区别较大，效果以实际代码为准。）
 > wails：https://v3alpha.wails.io/quick-start/installation/
-> 
+>
 > gin：https://gin-gonic.com/zh-cn/docs/
 
 ### 项目结构：
@@ -102,39 +136,10 @@ Waigo-Main
 
 ```
 
-### 运行项目:
->
-> wails3 dev
->
-
-### 打包成桌面可运行程序包：
-请参考：https://v3alpha.wails.io/guides/build/building/ 。
-
-推荐真机打包对应软件架构版本，因为一些依赖在各个平台下运行不一致。
-
-打包后的软件在”/Waigo/bin“目录。
-
-Windows平台：
-> 
-> wails3 build GOOS=darwin GOARCH=amd64
-> 
-> wails3 build GOOS=darwin GOARCH=arm64
-
-macOS平台：
-> 
-> wails3 build GOOS=windows GOARCH=amd64
-> 
-> wails3 build GOOS=windows GOARCH=arm64
-
-Linux平台：
-> 
-> wails3 build GOOS=linux GOARCH=amd64
-> 
-> wails3 build GOOS=linux GOARCH=arm64
-> 
-
 ### 运行效果：
 ![运行效果](./frontend/show.png)
+
+---
 
 ### Golang环境搭建:
 ```text

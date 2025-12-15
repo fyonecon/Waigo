@@ -43,7 +43,7 @@
         if (page.status === 404) {
             func.redirect_pathname({
                 url_pathname: func.url_path("/404"),
-                url_param: "?error_url="+encodeURIComponent(func.get_href())+"&error_msg=404 Route",
+                url_params: "?error_url="+encodeURIComponent(func.get_href())+"&error_msg=404 Route",
             });
         }else{
             let href = page.url.href;

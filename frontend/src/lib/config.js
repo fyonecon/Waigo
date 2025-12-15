@@ -2,6 +2,7 @@
 const config = {
     debug: false, // true、false
     app: {
+        app_name: "Waigo",
         app_class: "waigo_sv_", // ginthon_sv_ 、waigo_sv_
         app_version: "1.4.0", // 1.0.0
     },

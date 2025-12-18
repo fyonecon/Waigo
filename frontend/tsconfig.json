@@ -3,6 +3,7 @@
  * options that it can use to provide autocompletion and other features.  
  */
 {
+  "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
     "allowJs": true,
     "moduleResolution": "bundler",

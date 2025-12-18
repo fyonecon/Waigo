@@ -31,10 +31,19 @@ Golang版基座请戳：https://github.com/fyonecon/Waigo 。
 > git clone -b main https://github.com/fyonecon/Waigo.git Waigo-Main
 
 ### 运行项目:
+⚠️由于项目引入了Skeleton UI，运行npm或pnpm时，需要在/frontend/目录执行“npx sv add tailwindcss”来自动配置 Tailwind CSS 和相关的依赖：
+
+(参考：https://www.skeleton.dev/docs/svelte/get-started/installation/sveltekit )
+> 
+> npx sv add tailwindcss
+>
+
 下面命令已经内置包含npm install、go mod tidy。
 >
 > wails3 dev
 >
+
+
 
 ### 打包成桌面可运行程序包：
 请参考：https://v3alpha.wails.io/guides/build/building/ 。
@@ -67,6 +76,12 @@ Linux平台：
 > wails：https://v3alpha.wails.io/quick-start/installation/
 >
 > gin：https://gin-gonic.com/zh-cn/docs/
+>
+> Skeleton UI：https://www.skeleton.dev/docs/svelte/guides/mode
+>
+> Tailwind CSS：https://www.tailwindcss.cn/docs/installation
+>
+> Iconify SVG：https://icon-sets.iconify.design/
 
 ### 项目结构：
 ```text

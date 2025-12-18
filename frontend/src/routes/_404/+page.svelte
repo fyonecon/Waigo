@@ -1,16 +1,18 @@
 <script lang="ts">
     import { resolve } from '$app/paths';
+    import { page } from '$app/state';
     import func from "$lib/common/func.svelte.js";
-    import Example from "$lib/pages/example/Example.svelte";
+    import Page404 from "$lib/pages/_404/_404.svelte";
+
 
 </script>
 
 <svelte:head>
-    <title>Example</title>
+    <title>{func.get_translate("_404")}</title>
     <meta name="keywords" content="" />
     <meta name="description" content="" />
 </svelte:head>
 
-<section class="section-main scroll-y-style bg-white dark:bg-neutral-900">
-    <Example />
+<section class="section-main center scroll-y-style bg-white dark:bg-neutral-900">
+    <Page404 />
 </section>

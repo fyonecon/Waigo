@@ -28,7 +28,7 @@ var ConfigMap map[string]interface{} = map[string]interface{}{
 		"appName":    "Waigo",         // AppName，推荐使用英文
 		"appClass":   "Waigo_",        // 必须为string，且必须唯一，推荐使用英文
 		"appRights":  "Datathink.Top", // AppRights，也是软件安装默认路径
-		"appVersion": "1.2.0",         // AppVersion
+		"appVersion": "1.5.0",         // AppVersion
 	},
 	"sys": map[string]interface{}{
 		"appStateStartTime": 20251201010101,                // 最早时间 YmdHis

@@ -16,12 +16,20 @@
     "md5": "^2.3.0"
   },
   "devDependencies": {
+    "@iconify/svelte": "^5.1.0",
+    "@skeletonlabs/skeleton": "^4.8.0",
+    "@skeletonlabs/skeleton-svelte": "^4.8.0",
+    "@skeletonlabs/tw-plugin": "^0.4.1",
     "@sveltejs/adapter-auto": "^7.0.0",
     "@sveltejs/adapter-static": "^3.0.10",
-    "@sveltejs/kit": "^2.48.5",
+    "@sveltejs/kit": "^2.49.2",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
-    "svelte": "^5.43.8",
+    "@tailwindcss/vite": "^4.1.17",
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "svelte": "^5.46.0",
     "svelte-check": "^4.3.4",
+    "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3",
     "vite": "^7.2.2"
   }

@@ -89,9 +89,13 @@ Waigo-Main
 ├── build 配置Mac、Win、Linux环境的软件图标、名称、版本、打包信息等
 ├── frontend 视图UI，默认SvelteKit
 │   ├── src 视图发开发文件
-│   │   └── lib 页面、公共文件、公共函数。
-│   │   └── routes 路由、layout。
-│   ├── static 静态文件
+│   │   └── common 公共函数
+│   │   └── pages 页面具体实现
+│   │   └── parts 公用Svelte组件
+│   │   └── stores 绑定数据管理
+│   │   └── routes 路由、layout、公共参数验证
+│   ├── config.js 配置文件
+│   ├── static 静态文件、图标
 ├── ginassets 额外的web资源、视图。默认端口9850，外部浏览器可访问
 │   ├── files 放文件
 │   │   └── test.txt

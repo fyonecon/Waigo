@@ -43,10 +43,12 @@ func (awd *WindowController) ListGoRunJS(key string, dataDict map[string]interfa
 		content["dataTest"] = "test data 123"
 	} else if key == "make_window_token" {
 		windowToken := common.MakeRandID()
+		jsCallGoApi := common.InterfaceToString(internal.GetConfigMap("gin", "view_url")) + "/api/js_call_go"
 		//
 		state = 1
 		msg = "已生成"
 		content["windowToken"] = windowToken
+		content["jsCallGoApi"] = jsCallGoApi
 	} else {
 		state = 0
 		msg = "无白名单key"

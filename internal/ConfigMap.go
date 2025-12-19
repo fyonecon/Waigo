@@ -47,6 +47,7 @@ var ConfigMap map[string]interface{} = map[string]interface{}{
 			"http://datathink.top",
 			"https://datathink.top",
 		}, // 白名单域名或IP，格式：协议+IPv4+port、协议+域名
+		"view_url": "http://127.0.0.1:9850", // 生产环境：api主网址或额外视图网址（协议+网址+端口+路径，如：http://127.0.0.1:port ）
 	},
 	"wails": map[string]interface{}{
 		"debug": "off",

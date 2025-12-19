@@ -14,12 +14,11 @@
 	import SideLogo from "$lib/parts/SideLogo.svelte";
 	import SideSearch from "$lib/parts/SideSearch.svelte";
 	import SideFoot from "$lib/parts/SideFoot.svelte";
-	import config from "$lib/config.js";
+	import config from "../config.js";
 	import { watch_theme_model_data } from "$lib/stores/watch_theme_model.store.svelte.js";
 
-	// Wails3专用
+	// wails专用（在Ginthon中无任何作用，仅限代码跨平台同步）
 	import { Events } from "@wailsio/runtime";
-
 	import { AppServicesForWindow } from "../../bindings/datathink.top/Waigo/internal/bootstrap";
 
 	// 重定向到自定义的404页面
@@ -112,6 +111,7 @@
 			} catch(e) {
 				console.error("不能导入Wails-UI相关文件");
 			}
+
 		} else {
 			console.warn("Runtime：", "请指明Web运行的浏览器环境，否则数据不能初始化，只能使用简易Web功能。", func.is_gthon(), func.is_wails(), func.get_agent(), func.get_href());
 

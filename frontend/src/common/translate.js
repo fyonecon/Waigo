@@ -55,14 +55,22 @@ const lang_dict = {
         zh: "我的",
         en: "Me",
     },
+    user_tips: {
+        zh: "设置",
+        en: "Settings",
+    },
+    user_need_login: {
+        zh: "请登录...",
+        en: "Please login...",
+    },
     ThemeModel: {
         zh: "主题",
         en: "Themes",
     },
     //
     ITHome: {
-        zh: "IT之家",
-        en: "ITHome",
+        zh: "爬IT之家",
+        en: "Spider ITHome",
     },
     //
     btn_cancel: {
@@ -109,6 +117,8 @@ const lang_dict = {
         zh: "暗",
         en: "Dark",
     },
+    //
+
 
     // =========
 //

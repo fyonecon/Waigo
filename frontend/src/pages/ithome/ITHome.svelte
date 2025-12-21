@@ -9,18 +9,26 @@
 
 
     // 本页面参数
-    let loading_tip = $state("Loading..");
+    let loading_tip = $state("...");
     let news_array = $state([]);
 
 
-    // 本页面函数
+    // 本页面函数：Svelte的HTML组件onXXX=中正确调用：={()=>def.xxx()}
     const def = {
         read_ithome: function(){
             let that = this;
             //
             loading_tip = "Loading..."
             //
-            const _api_url = "http://127.0.0.1:9750/api/spider/ithome";
+            let port = "";
+            if (func.is_wails()){
+                port = "9850";
+            }else if(func.is_gthon()){
+                port = "9750";
+            }else{
+                port = "80";
+            }
+            const _api_url = "http://127.0.0.1:"+port+"/api/spider/ithome";
             const _app_token = func.get_local_data("app_token");
             const body_dict = {
                 app_token: _app_token,
@@ -51,29 +59,37 @@
 
     // 页面装载完成后，只运行一次
     onMount(() => {
-        def.read_ithome();
+        // def.read_ithome();
     });
 
 
 </script>
 
-<div style="padding: 10px 10px;">
+<div>
 
-    <div>
-        <button type="button" class="btn preset-tonal-warning" onclick={def.read_ithome}>Load Spider</button>
-    </div>
+    <ul class="ul-group font-text">
+        <li class="li-group select-none">
+            <div class="li-group-title break">
+                爬IT之家首页 <button type="button" class="btn btn-sm preset-filled-primary-500" onclick={()=>def.read_ithome()} title="Click">Start</button>
+            </div>
+            <div class="li-group-content">
+                <div style="height: 5px;"></div>
+                <div>{loading_tip}</div>
+                <ul>
+                    {#each news_array as news, index}
+                        <li style="margin-top: 20px;">
+                            <div data-news_index="{news['news_index']}">{index}</div>
+                            <div>详情：<span class="font-blue">{news["news_href"]}</span></div>
+                            <div>标题：{decodeURIComponent(news["news_title"])}</div>
+                            <div>ID：{news["news_id"]}</div>
+                            <div>发布时间：{news["news_time"]}</div>
+                            <div>评论数：{news["comments_num"]}</div>
+                        </li>
+                    {/each}
+                </ul>
+            </div>
 
-    <div>{loading_tip}</div>
-    <ul>
-        {#each news_array as news, index}
-            <li style="margin-top: 20px;">
-                <div data-news_index="{news['news_index']}">{index}</div>
-                <div>详情：<span class="font-blue">{news["news_href"]}</span></div>
-                <div>标题：{decodeURIComponent(news["news_title"])}</div>
-                <div>ID：{news["news_id"]}</div>
-                <div>发布时间：{news["news_time"]}</div>
-                <div>评论数：{news["comments_num"]}</div>
-            </li>
-        {/each}
+        </li>
     </ul>
+
 </div>

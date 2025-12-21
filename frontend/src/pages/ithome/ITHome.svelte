@@ -35,6 +35,7 @@
                 app_class: config.app.app_class
             };
             FetchPOST(_api_url, body_dict).then(result=>{
+                console.log("_api_url=", _api_url, result);
                 let state = result.state;
                 let msg = result.msg;
                 if (state === 1){

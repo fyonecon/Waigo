@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-    <title>Example</title>
+    <title>{func.get_translate("Example")}</title>
     <meta name="keywords" content="" />
     <meta name="description" content="" />
 </svelte:head>

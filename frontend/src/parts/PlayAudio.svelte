@@ -536,8 +536,8 @@
 <style>
     .section-play_mp3{
         position: fixed;
-        bottom: 20px;
-        right: 20px;
+        bottom: 15px;
+        right: 15px;
         width: 220px;
         height: 40px;
         overflow: hidden;

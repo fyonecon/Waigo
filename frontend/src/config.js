@@ -4,7 +4,7 @@ const config = {
     app: {
         app_name: "Waigo",
         app_class: "waigo_sv_", // ginthon_sv_ 、waigo_sv_
-        app_version: "1.6.3", // 1.0.0
+        app_version: "1.6.4", // 1.0.0
     },
     sys:{
         backend: "go", // go、py

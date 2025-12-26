@@ -4,6 +4,7 @@
     import FetchPOST from "../common/post.svelte";
     import {onMount, onDestroy} from "svelte";
     import config from "../config";
+    import {play_audio_data} from "../stores/play_audio.store.svelte";
 
 
     // 本页面参数
@@ -17,7 +18,9 @@
     let player_show_play = $state("show");
     let player_show_stop = $state("hide");
     let player_show_control = $state("hide");
-    let play_list_max_len = $state(2000); // 播放列表最大长度
+    let play_list_max_len = $state(1000); // 播放列表最大长度
+    let song_info_filename = $state("");
+    let play_songs_animation = $state("");
 
     // 用于存储事件监听器引用，便于清理
     let eventListeners = {
@@ -54,6 +57,9 @@
                 href = the_playing.href;
                 player_show_play = "hide";
                 player_show_stop = "show";
+                player_show_control = "show";
+                song_info_filename = the_playing.filename || '未知歌曲'
+                play_songs_animation = "play-songs-animation";
                 // 渲染系统音乐通知栏
                 navigator.mediaSession.metadata = new MediaMetadata({
                     title: the_playing.filename || '未知歌曲', // 歌名
@@ -131,6 +137,7 @@
             //
             console.log("Player Init");
             player_init_state = true;
+            play_audio_data.play_state = false;
 
             // 清理旧的事件监听器
             that.cleanup_event_listeners();
@@ -216,6 +223,9 @@
             play_error_timeout = 0;
             play_new_timeout = 0;
             play_current_timeout = 0;
+            play_audio_data.play_state = false;
+            song_info_filename = "";
+            play_songs_animation = "";
         },
         play_stop: function(){ // 暂停播放
             let that = this;
@@ -223,6 +233,7 @@
             that.play_clear_timer();
             player_show_play = "show";
             player_show_stop = "hide";
+            //
             that.is_playing().then(state=>{
                 let current = myAudio.currentTime;
                 if (!current){
@@ -372,14 +383,14 @@
             let the_playing = func.get_local_data(player_prefix + "playing");
             return the_playing?JSON.parse(decodeURIComponent(the_playing)):null;
         },
-        set_playing: function(the_playing = {}){ // 新增或更新当前播放
+        set_playing: function(the_playing:object = {}){ // 新增或更新当前播放
             return func.set_local_data(player_prefix + "playing", encodeURIComponent(JSON.stringify(the_playing)));
         },
         get_list: function(){ // 获取列表，最大1000长度
             let list = func.get_local_data(player_prefix + "list");
             return (list.length>0)?JSON.parse(decodeURIComponent(list)).slice(0, play_list_max_len):null;
         },
-        set_list: function(list_array = []){ // 新增或更新列表，最大1000长度
+        set_list: function(list_array:object[] = []){ // 新增或更新列表，最大1000长度
             let list = "";
             if (typeof list_array === "object"){
                 list = JSON.stringify(list_array.slice(0, play_list_max_len));
@@ -438,30 +449,35 @@
     };
 
 
+    // 检测$state()值变化
+    $effect(() => {
+        if (play_audio_data.play_state){
+            def.play_start();
+        }else {
+            // 跳过false情况
+        }
+    });
+
+
     // 刷新页面数据
     afterNavigate(() => {
         //
-        // def.create_player();
-
+        // 展示播放按钮
+        if (def.get_playing()){ // 有历史
+            player_show_control = "show";
+        }else{ // 无历史就加载新的
+            //
+        }
     });
 
     onMount(()=>{
         myAudio = new Audio();
+        //
+        // 展示播放按钮
         if (def.get_playing()){ // 有历史
             player_show_control = "show";
         }else{ // 无历史就加载新的
-            // route = func.get_route();
-            // if (route === "/play_audio"){
-            //     def.fetch_play_list().then(_state=>{
-            //         if (_state){
-            //             player_show_control = "show";
-            //         }else{ // 无播放数据
-            //             player_show_control = "hide";
-            //         }
-            //     });
-            // }else{
-            //     console.log("路由不正确时不加载play_list=", route);
-            // }
+            //
         }
     });
 
@@ -493,17 +509,26 @@
 
 </script>
 
-<section class="section-play_mp3 select-none border-radius">
-    <div class="page-player-div {player_show_control}">
-        <button type="button" class="player-btn font-mini font-blue hide" onclick={()=>def.fetch_play_list()} title="Update List">List</button>
-        <button type="button" class="player-btn font-mini font-blue hide" onclick={()=>def.play_before()} title="Before">before</button>
-        <button type="button" class="player-btn font-mini font-blue {player_show_play}" onclick={()=>def.play_start()} title="Play">
+<section class="section-play_mp3 select-none border-radius bg-neutral-200 dark:bg-neutral-800 {player_show_control} ">
+    <div class="page-player-song_info break-ellipsis select-text">
+        <div class="page-player-song_info-name marquee-content" title="{song_info_filename}">
+            {song_info_filename?song_info_filename:"···"}
+        </div>
+    </div>
+    <div class="page-player-div select-text">
+<!--        <button type="button" class="player-btn font-mini font-blue click hide" onclick={()=>def.fetch_play_list()} title="Update List">List</button>-->
+        <button type="button" class="player-btn font-mini font-blue click " onclick={()=>def.play_before()} title="Before">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M14.91 6.71a.996.996 0 0 0-1.41 0L8.91 11.3a.996.996 0 0 0 0 1.41l4.59 4.59a.996.996 0 1 0 1.41-1.41L11.03 12l3.88-3.88c.38-.39.38-1.03 0-1.41"/></svg>
+        </button>
+        <button type="button" class="player-btn font-mini font-blue click {player_show_play}" onclick={()=>def.play_start()} title="Play">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48"><path fill="currentColor" d="m16.75 8.412l24.417 12.705a3.25 3.25 0 0 1 0 5.766L16.75 39.588A3.25 3.25 0 0 1 12 36.705v-25.41a3.25 3.25 0 0 1 4.549-2.98z"/></svg>
         </button>
-        <button type="button" class="player-btn font-mini font-blue {player_show_stop}" onclick={()=>def.play_stop()} title="Stop">
+        <button type="button" class="player-btn font-mini font-blue click {player_show_stop}" onclick={()=>def.play_stop()} title="Stop">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect width="4" height="14" x="6" y="5" fill="currentColor" rx="1"/><rect width="4" height="14" x="14" y="5" fill="currentColor" rx="1"/></svg>
         </button>
-        <button type="button" class="player-btn font-mini font-blue hide" onclick={()=>def.play_next()} title="Next">next</button>
+        <button type="button" class="player-btn font-mini font-blue click" onclick={()=>def.play_next()} title="Next">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m19 12l12 12l-12 12"/></svg>
+        </button>
     </div>
 </section>
 
@@ -513,23 +538,75 @@
         position: fixed;
         bottom: 10px;
         right: 10px;
-        width: 40px;
+        width: 220px;
         height: 40px;
         overflow: hidden;
         padding: 5px 5px;
+        clear: both;
+        border-radius: 40px;
+    }
+    .page-player-song_info{
+        width: calc(220px - 10px - 100px);
+        line-height: 30px;
+        overflow: hidden;
+        float: left;
+        opacity: 0.8;
+        text-align: center;
+        padding: 0 5px;
+        border-radius: 30px;
     }
     .page-player-div{
-        width: 100%;
+        width: 100px;
+        float: left;
     }
     .player-btn{
         width: 30px;
         height: 30px;
         border-radius: 30px;
         text-align: center;
-        background-color: rgba(180,180,180,0.4);
+        background-color: rgba(180,180,180,0.2);
+        float: left;
+        margin-right: 5px;
+    }
+    .player-btn:last-child{
+        margin-right: 0;
     }
     .player-btn > svg{
-        margin-top: 0px;
+        margin-top: 0;
         margin-left: 3px;
     }
+
+
+    /*背景轮动颜色*/
+    .play-songs-animation{
+        animation: play_songs_animation 10s infinite ease-in-out;
+    }
+    @keyframes play_songs_animation {
+        0%   {background-color: rgba(100,100,100,0.8);color: rgba(180,180,180,1)}
+        20%  {background-color: rgba(85,85,85,0.5);color: rgba(200,200,200,1)}
+        50%  {background-color: rgba(26,114,254, 0.5);color: rgba(210,210,210,1)}
+        80%  {background-color: rgba(85,85,85,0.5);color: rgba(200,200,200,1)}
+        100% {background-color: rgba(100,100,100,0.8);color: rgba(180,180,180,1)}
+    }
+
+
+    /*流水字，从右向左*/
+    .marquee-content {
+        display: inline-block;
+        animation: marquee 10s linear infinite;
+    }
+
+    .marquee-content:hover {
+        animation-play-state: paused; /* 鼠标悬停暂停 */
+    }
+
+    @keyframes marquee {
+        0% {
+            transform: translateX(110%); /* 从右侧开始 */
+        }
+        100% {
+            transform: translateX(-110%); /* 移动到左侧 */
+        }
+    }
+
 </style>

@@ -52,13 +52,13 @@ Golang版基座请戳：https://github.com/fyonecon/Waigo 。
 
 打包后的软件在”/Waigo/bin“目录。
 
-Windows平台：
+macOS平台：
 >
 > wails3 build GOOS=darwin GOARCH=amd64
 >
 > wails3 build GOOS=darwin GOARCH=arm64
 
-macOS平台：
+Windows平台：
 >
 > wails3 build GOOS=windows GOARCH=amd64
 >

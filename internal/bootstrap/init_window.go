@@ -16,7 +16,7 @@ import (
 type AppServicesForWindow struct{}
 
 // JSCallGo js调用go
-// 此处可能存在Bug，runtime接口参数获取不到js传递的参数：ERR Invalid runtime call: error="missing object value"。如果仍有问题，请使用gin api实现js_call_go 。
+// web端 runtime或window 需要关闭web的ssr，是能是browser模式下才能用
 func (asw *AppServicesForWindow) JSCallGo(key string, dataDict map[string]interface{}) map[string]interface{} {
 	//fmt.Println("JSCallGo=")
 	var awd = window_controller.WindowController{}

@@ -11,6 +11,7 @@ import (
 )
 
 // JSMustData 必要参数
+// 已废弃
 func (awd *AppWindow) JSMustData(ctx *gin.Context) {
 	//
 	windowToken := common.MakeRandID()

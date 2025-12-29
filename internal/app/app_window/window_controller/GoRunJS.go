@@ -41,7 +41,7 @@ func (awd *WindowController) ListGoRunJS(key string, dataDict map[string]interfa
 		state = 1
 		msg = "OK Test"
 		content["dataTest"] = "test data 123"
-	} else if key == "make_window_token" {
+	} else if key == "make_window_token" { //  data_dict={}
 		windowToken := common.MakeRandID()
 		jsCallGoApi := common.InterfaceToString(internal.GetConfigMap("gin", "view_url")) + "/api/js_call_go"
 		//

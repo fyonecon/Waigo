@@ -61,6 +61,7 @@ func (awd *AppWindow) RouteWindow(route *gin.Engine, ginHTML fs.FS, ginFiles fs.
 
 	// view_js必要参数
 	// 如：http://127.0.0.1:9850/js_must_data.js
+	// // 已废弃
 	route.Any("/js_must_data.js", mdw.HttpCorsHTML, mdw.HttpError500, awd.JSMustData)
 	//
 

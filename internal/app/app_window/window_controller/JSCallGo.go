@@ -29,6 +29,14 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 		state = 1
 		msg = "Stop Emit"
 		content["state_num"] = stateNum
+	} else if key == "make_window_token" { //。 data_dict={}
+		windowToken := common.MakeRandID()
+		jsCallGoApi := common.InterfaceToString(internal.GetConfigMap("gin", "view_url")) + "/api/js_call_go"
+		//
+		state = 1
+		msg = "已生成"
+		content["windowToken"] = windowToken
+		content["jsCallGoApi"] = jsCallGoApi
 	} else if key == "window_show" { // data_dict={}
 		internal.WINDOW.Show()
 		internal.WINDOW.Focus()

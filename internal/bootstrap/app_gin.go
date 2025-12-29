@@ -64,7 +64,7 @@ func RouteMust(route *gin.Engine, ginHTML fs.FS, ginFiles fs.FS) {
 	// 默认路由 html（html=file）
 	// 如：http://127.0.0.1:9850/html/index.html
 	group_html := route.Group("/html", mdw.HttpCorsHTML, mdw.HttpError500)
-	group_html.GET("/:filename", func(ctx *gin.Context) {
+	group_html.GET("/*filename", func(ctx *gin.Context) {
 		filename := ctx.Param("filename")
 		rootPath := "ginassets/html/" // 结尾/，开头无/
 		filepath := ""                // 完整路径
@@ -74,9 +74,12 @@ func RouteMust(route *gin.Engine, ginHTML fs.FS, ginFiles fs.FS) {
 		} else {
 			filepath = rootPath + filename
 		}
-		//
-		theFile, err := ginHTML.Open(filepath) // 全路径：如 ginassets/html/favicon.ico
-		if err != nil {
+		if common.IsFile(filepath) {
+			fileType := common.GetFileContentType(filename)
+			ctx.Header("Content-Type", fileType)
+			ctx.Header("filename", filename)
+			return
+		} else {
 			ctx.JSON(404, gin.H{
 				"state": 0,
 				"msg":   "文件不存在",
@@ -89,26 +92,24 @@ func RouteMust(route *gin.Engine, ginHTML fs.FS, ginFiles fs.FS) {
 			})
 			return
 		}
-		defer theFile.Close()
-		//
-		fileType := common.GetFileContentType(filename)
-		ctx.Header("Content-Type", fileType)
-		io.Copy(ctx.Writer, theFile) // 流式传输
-		return
 	})
 
-	// 默认路由 file（html=file）
+	// 默认路由 files（html=file）
 	// 如：http://127.0.0.1:9850/files/test.txt
 	group_files := route.Group("/files", mdw.HttpCorsFiles, mdw.HttpError500)
-	group_files.GET("/:filename", func(ctx *gin.Context) {
+	group_files.GET("/*filename", func(ctx *gin.Context) {
 		filename := ctx.Param("filename")
 		rootPath := "ginassets/files/"  // 结尾/，开头无/
 		filepath := rootPath + filename // 完整路径
 		//
 		if len(filename) > 0 {
-			//
-			theFile, err := ginFiles.Open(filepath) // 全路径：如 ginassets/files/favicon.ico
-			if err != nil {
+			if common.IsFile(filepath) {
+				fileType := common.GetFileContentType(filepath)
+				filename := common.GetFilename(filepath)
+				ctx.Header("Content-Type", fileType)
+				ctx.Header("filename", filename)
+				ctx.File(filepath)
+			} else {
 				ctx.JSON(404, gin.H{
 					"state": 0,
 					"msg":   "文件不存在",
@@ -119,13 +120,8 @@ func RouteMust(route *gin.Engine, ginHTML fs.FS, ginFiles fs.FS) {
 						"appRights":  appRights,
 					},
 				})
-				return
 			}
-			defer theFile.Close()
-			//
-			fileType := common.GetFileContentType(filename)
-			ctx.Header("Content-Type", fileType)
-			io.Copy(ctx.Writer, theFile) // 流式传输
+			return
 		} else {
 			ctx.JSON(404, gin.H{
 				"state": 0,
@@ -164,6 +160,7 @@ func RouteMust(route *gin.Engine, ginHTML fs.FS, ginFiles fs.FS) {
 		defer theFile.Close()
 		//
 		ctx.Header("Content-Type", fileType)
+		ctx.Header("filename", favicon)
 		io.Copy(ctx.Writer, theFile) // 流式传输
 		return
 	})
@@ -177,6 +174,7 @@ func RouteMust(route *gin.Engine, ginHTML fs.FS, ginFiles fs.FS) {
 				"appName":    appName,
 				"appVersion": "v" + appVersion,
 				"appRights":  appRights,
+				"_404url":    common.RequestFullURL(ctx),
 			},
 		})
 		return

@@ -399,15 +399,15 @@ func CopyDir(oldDirPath string, newDirPath string) error {
 	return err
 }
 
-// GetTimeDate 获取日期时间戳，s
-// Y年m月d号 H:i:s.MS.NS 星期W
-func GetTimeDate(_format string) (date string) {
+// FormatTimeToDate 将time格式化成日期
+func FormatTimeToDate(_format string, timer time.Time) (date string) {
 	if len(_format) == 0 {
 		_format = "YmdHisMS"
 	}
 	date = _format
-
-	timer := time.Now()
+	if timer.IsZero() {
+		timer = time.Now()
+	}
 
 	var year int64 = int64(timer.Year())
 	var month int64 = int64(timer.Month())
@@ -482,6 +482,15 @@ func GetTimeDate(_format string) (date string) {
 	date = strings.Replace(date, "w", _week, -1)
 
 	return
+}
+
+// GetTimeDate 获取日期时间戳，s
+// Y年m月d号 H:i:s.MS.NS 星期W
+func GetTimeDate(_format string) string {
+	if len(_format) == 0 {
+		_format = "YmdHisMS"
+	}
+	return FormatTimeToDate(_format, time.Now())
 }
 
 // StringHasString 判断字符串中是否包含某个字符串
@@ -731,11 +740,12 @@ func MapToJsonString(param map[string]interface{}) string {
 	return dataString
 }
 
-// JsonStringToMap jsonString转map
+// JsonStringToMap jsonString转map，只能是 {} 格式，不能是map开头格式
 func JsonStringToMap(jsonString string) map[string]interface{} {
 	var tempMap map[string]interface{}
 	err := json.Unmarshal([]byte(jsonString), &tempMap)
 	if err != nil {
+		fmt.Println("JsonStringToMap=", err, jsonString)
 		return map[string]interface{}{}
 	} else {
 		return tempMap
@@ -1021,4 +1031,39 @@ func GetFileContentType(filename string) string {
 		fileContentType = "application/octet-stream"
 	}
 	return fileContentType
+}
+
+// GetFilename 获取
+func GetFilename(fullPath string) string {
+	return filepath.Base(fullPath)
+}
+
+// CachePath 当前平台存储程序缓存的路径，结尾无/
+func CachePath() string {
+	cachePath, err := os.UserCacheDir()
+	if err != nil {
+		return ""
+	} else {
+		return cachePath
+	}
+}
+
+// FormatFileSize 格式化文件大小成可读大小
+func FormatFileSize(bytes int64) string {
+	const unit = 1024
+	if bytes < unit {
+		return fmt.Sprintf("%d B", bytes)
+	}
+	// 预定义单位
+	units := []string{"B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"}
+	// 计算应该使用哪个单位
+	exp := int(math.Log(float64(bytes)) / math.Log(float64(unit)))
+	if exp >= len(units) {
+		exp = len(units) - 1
+	}
+	// 计算值
+	value := float64(bytes) / math.Pow(float64(unit), float64(exp))
+	// 格式化输出，保留2位小数
+	format := "%.2f %s"
+	return fmt.Sprintf(format, value, units[exp])
 }

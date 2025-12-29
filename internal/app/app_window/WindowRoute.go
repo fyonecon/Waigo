@@ -19,6 +19,7 @@ func (awd *AppWindow) RouteWindow(route *gin.Engine, ginHTML fs.FS, ginFiles fs.
 
 	// 中间件
 	mdw := app_gin.Middlewares{}
+	//gcl := gin_controller.GinController{}
 
 	// 重写js_call_go
 	// 如：http://127.0.0.1:9850/api/js_call_go
@@ -38,10 +39,9 @@ func (awd *AppWindow) RouteWindow(route *gin.Engine, ginHTML fs.FS, ginFiles fs.
 		_dataDict := common.RequestInput(ctx, "data_dict")
 		dataDict := common.JsonStringToMap(_dataDict)
 		//
-		//fmt.Println("js_call_go=", _windowToken, windowTokenState, _apiURL, apiURLState)
+		//fmt.Println("js_call_go=", _windowToken, windowTokenState, _apiURL, apiURLState, key, _dataDict)
 		//
 		if windowTokenState && apiURLState { // 校验通过就返回对照表
-			//fmt.Println("api/js_call_go=", key, dataDict)
 			var awd = window_controller.WindowController{}
 			ctx.JSON(http.StatusOK, awd.ListJSCallGo(key, dataDict))
 		} else {
@@ -59,5 +59,9 @@ func (awd *AppWindow) RouteWindow(route *gin.Engine, ginHTML fs.FS, ginFiles fs.
 		return
 	})
 
+	// view_js必要参数
+	// 如：http://127.0.0.1:9850/js_must_data.js
+	route.Any("/js_must_data.js", mdw.HttpCorsHTML, mdw.HttpError500, awd.JSMustData)
 	//
+
 }

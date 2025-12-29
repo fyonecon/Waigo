@@ -116,7 +116,7 @@ func (mdw *Middlewares) HttpError500(ctx *gin.Context) {
 	defer func() {
 		if err := recover(); err != nil {
 			//打印错误堆栈信息
-			fmt.Printf("\n Http panic: %v \n\n", err)
+			fmt.Printf("\n 500错误： Http panic: %v \n\n", err)
 
 			pc := make([]uintptr, 8)
 			runtime.Callers(2, pc)
@@ -139,7 +139,7 @@ func (mdw *Middlewares) HttpError500(ctx *gin.Context) {
 				"5": _fc5,
 				"6": _fc6,
 			}
-			fmt.Println("代码500错误：", errorFunc1)
+			fmt.Println("代码500错误：", pc)
 
 			// 返回
 			ctx.JSON(500, gin.H{

@@ -17,7 +17,7 @@ Golang版基座请戳：https://github.com/fyonecon/Waigo 。
 
 ### 程序要求：
 ```
-需要 go1.24+
+需要 go1.25+
 
 需要 webview2或webkit基础环境
 

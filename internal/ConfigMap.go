@@ -31,9 +31,9 @@ var ConfigMap map[string]interface{} = map[string]interface{}{
 		"appVersion": "1.6.4",         // AppVersion
 	},
 	"sys": map[string]interface{}{
-		"appStateStartTime": 20251201010101,         // 最早时间 YmdHis
-		"appStateEndTime":   20341201010101,         // 截止时间，一个版本：9年。（这是软件及扩展更新的要求）
-		"cachePath":         "top.datathink.Wailgo", // 缓存文件夹，结尾无/
+		"appStateStartTime": 20251201010101,        // 最早时间 YmdHis
+		"appStateEndTime":   20341201010101,        // 截止时间，一个版本：9年。（这是软件及扩展更新的要求）
+		"cachePath":         "top.datathink.Waigo", // 缓存文件夹，结尾无/
 	},
 	"gin": map[string]interface{}{
 		"ginDebug":        "on",     // on 显示Gin日志，off 不显示Gin日志

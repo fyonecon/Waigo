@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"datathink.top/Waigo/internal"
 	"datathink.top/Waigo/internal/common"
+	"fmt"
 	"runtime"
 )
 
@@ -17,6 +18,15 @@ func InitCheckSYS() (int64, string, map[string]interface{}) {
 	content := map[string]interface{}{
 		"error": "",
 	}
+
+	// 创建必要目录
+	dataPathDirsName := common.InterfaceToArrayString(internal.GetConfigMap("sys", "dataPathDirsName"))
+	for _, dataPathDirsName := range dataPathDirsName {
+		_state, _fullPath := common.CreateDataDirLevel1(dataPathDirsName)
+		fmt.Println(_state, _fullPath)
+	}
+	_localDataPath := common.DataPath() + "/" + common.InterfaceToString(internal.GetConfigMap("sys", "dataPath")) // 结尾无/
+	fmt.Println("系统必要目录：", _localDataPath, common.IsDir(_localDataPath+"/running"), common.CachePath())
 
 	// 检查逻辑CPU数量
 	minCPUs := 2 // 个逻辑CPU

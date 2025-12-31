@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/url"
 	"os"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -21,7 +22,7 @@ const CodeSalt string = "2025"
 // LocalDBSetData 新增或更新
 func (ld *LocalDB) LocalDBSetData(dataKey string, dataValue string, dataTimeoutS int64) string {
 	ldf := LocalDBFunc{}
-	var LocalPath string = ldf.CachePath() + "/" + ldf.InterfaceToString(internal.GetConfigMap("sys", "cachePath"))
+	var LocalPath string = ldf.DataPath() + "/" + ldf.InterfaceToString(internal.GetConfigMap("sys", "dataPath"))
 
 	secret := Secret{}
 	filename := ldf.InterfaceToString(internal.GetConfigMap("app", "appClass")) + ldf.MD5(dataKey+CodeSalt) + ".lcl"
@@ -50,7 +51,7 @@ func (ld *LocalDB) LocalDBSetData(dataKey string, dataValue string, dataTimeoutS
 // 1有文件，-1无文件
 func (ld *LocalDB) LocalDBGetData(dataKey string) (string, int64) {
 	ldf := LocalDBFunc{}
-	var LocalPath string = ldf.CachePath() + "/" + ldf.InterfaceToString(internal.GetConfigMap("sys", "cachePath"))
+	var LocalPath string = ldf.DataPath() + "/" + ldf.InterfaceToString(internal.GetConfigMap("sys", "dataPath"))
 
 	secret := Secret{}
 	filename := ldf.InterfaceToString(internal.GetConfigMap("app", "appClass")) + ldf.MD5(dataKey+CodeSalt) + ".lcl"
@@ -89,7 +90,7 @@ func (ld *LocalDB) LocalDBGetData(dataKey string) (string, int64) {
 // 1有文件，-1无文件
 func (ld *LocalDB) LocalDBDelData(dataKey string) int64 {
 	ldf := LocalDBFunc{}
-	var LocalPath string = ldf.CachePath() + "/" + ldf.InterfaceToString(internal.GetConfigMap("sys", "cachePath"))
+	var LocalPath string = ldf.DataPath() + "/" + ldf.InterfaceToString(internal.GetConfigMap("sys", "dataPath"))
 
 	filename := ldf.InterfaceToString(internal.GetConfigMap("app", "appClass")) + ldf.MD5(dataKey+CodeSalt) + ".lcl"
 	_theFilepath := LocalPath + "/local_database"
@@ -194,14 +195,41 @@ func (ldf *LocalDBFunc) URIDecode(uri string) string {
 	}
 }
 
-// CachePath 当前平台存储程序缓存的路径，结尾无/
-func (ldf *LocalDBFunc) CachePath() string {
-	cachePath, err := os.UserCacheDir()
+// DataPath 当前平台存储程序持久化数据的路径，结尾无/
+func (ldf *LocalDBFunc) DataPath() string {
+	dataPath, err := os.UserHomeDir()
+	if ldf.IsMac() {
+		dataPath = dataPath + "/Library/Application Support"
+	} else if ldf.IsWin() {
+		dataPath = dataPath + "/AppData/Local"
+	} else if ldf.IsLinux() {
+		dataPath = dataPath + "/.local/share"
+	} else {
+		dataPath = dataPath + "/.wgo_data"
+	}
 	if err != nil {
 		return ""
 	} else {
-		return cachePath
+		return dataPath
 	}
+}
+
+// IsMac 是mac平台
+func (ldf *LocalDBFunc) IsMac() bool {
+	sys := runtime.GOOS
+	return sys == "darwin"
+}
+
+// IsWin 是win平台
+func (ldf *LocalDBFunc) IsWin() bool {
+	sys := runtime.GOOS
+	return sys == "windows"
+}
+
+// IsLinux 是linux平台
+func (ldf *LocalDBFunc) IsLinux() bool {
+	sys := runtime.GOOS
+	return sys == "linux"
 }
 
 // MakeDir 创建文件夹

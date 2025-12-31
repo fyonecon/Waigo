@@ -34,6 +34,11 @@ var ConfigMap map[string]interface{} = map[string]interface{}{
 		"appStateStartTime": 20251201010101,        // 最早时间 YmdHis
 		"appStateEndTime":   20341201010101,        // 截止时间，一个版本：9年。（这是软件及扩展更新的要求）
 		"cachePath":         "top.datathink.Waigo", // 缓存文件夹，结尾无/
+		"dataPath":          "top.datathink.Waigo", // 数据持久化文件夹，结尾无/
+		"dataPathDirsName": []string{
+			"running", "local_database", "gin_ssl", "user", // 必要
+			// 其它
+		},
 	},
 	"gin": map[string]interface{}{
 		"ginDebug":        "on",     // on 显示Gin日志，off 不显示Gin日志
@@ -44,7 +49,8 @@ var ConfigMap map[string]interface{} = map[string]interface{}{
 			"http://127.0.0.1",
 			"https://127.0.0.1",
 		}, // 白名单域名或IP，格式：协议+IPv4+port、协议+域名
-		"view_url": "http://127.0.0.1:9850", // 生产环境：api主网址或额外视图网址（协议+网址+端口+路径，如：http://127.0.0.1:port ）
+		"view_url": "http://127.0.0.1:9850", // 生产环境：api主网址或额外视图网址（协议+网址+端口+路径，如：http(s)://127.0.0.1:port ）。注意ssl是否已开启。
+		"ssl":      "OFF",                   // "ON"、"OFF"，是否开启ssl
 	},
 	"wails": map[string]interface{}{
 		"debug": "off",

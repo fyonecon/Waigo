@@ -1048,6 +1048,38 @@ func CachePath() string {
 	}
 }
 
+// DataPath 当前平台存储程序持久化数据的路径，结尾无/
+func DataPath() string {
+	dataPath, err := os.UserHomeDir()
+	if IsMac() {
+		dataPath = dataPath + "/Library/Application Support"
+	} else if IsWin() {
+		dataPath = dataPath + "/AppData/Local"
+	} else if IsLinux() {
+		dataPath = dataPath + "/.local/share"
+	} else {
+		dataPath = dataPath + "/.wgo_data"
+	}
+	if err != nil {
+		return ""
+	} else {
+		return dataPath
+	}
+}
+
+// CreateDataDirLevel1 创建必要目录
+func CreateDataDirLevel1(dirName string) (bool, string) {
+	_localDataPath := DataPath() + "/" + InterfaceToString(internal.GetConfigMap("sys", "dataPath")) // 结尾无/
+	fullPath := _localDataPath + "/" + dirName
+	if !IsDir(fullPath) {
+		_, err := MakeDir(fullPath)
+		if err != nil {
+			return false, fullPath
+		}
+	}
+	return true, fullPath
+}
+
 // FormatFileSize 格式化文件大小成可读大小
 func FormatFileSize(bytes int64) string {
 	const unit = 1024

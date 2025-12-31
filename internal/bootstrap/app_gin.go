@@ -1,6 +1,7 @@
 package bootstrap
 
 import (
+	"crypto/tls"
 	"datathink.top/Waigo/internal"
 	"datathink.top/Waigo/internal/app/app_gin"
 	"datathink.top/Waigo/internal/app/app_window"
@@ -8,6 +9,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/wailsapp/wails/v3/pkg/application"
+	"golang.org/x/crypto/acme/autocert"
 	"io"
 	"io/fs"
 	"io/ioutil"
@@ -219,12 +221,50 @@ func RunGin(app *application.App, window *application.WebviewWindow, ginHTML fs.
 	agn.RouteHTML(httpServer, ginHTML, ginFiles)
 	agn.RouteFile(httpServer, ginHTML, ginFiles)
 
-	// 启动
-	err := httpServer.Run(":" + ginPort)
-	if err != nil {
-		fmt.Println("Error: 127.0.0.1:" + ginPort + " 开启失败，可能是 Gin服务已启用 或 Gin端口冲突 。")
-		time.Sleep(1 * time.Second)
-		app.Quit() // 服务不能启动就直接退出所有程序（防止重复开启软件）
-	}
+	if common.InterfaceToString(internal.GetConfigMap("gin", "ssl")) == "ON" {
+		_localDataPath := common.DataPath() + "/" + common.InterfaceToString(internal.GetConfigMap("sys", "dataPath")) // 结尾无/
 
+		// 域名
+		host0 := "localhost"
+		host1 := "127.0.0.1" // 127.0.0.1，localhost，www.xxx.com
+
+		// 配置自动证书管理器
+		manager := &autocert.Manager{
+			Prompt:     autocert.AcceptTOS,
+			HostPolicy: autocert.HostWhitelist(host0, host1),           // 多个host
+			Cache:      autocert.DirCache(_localDataPath + "/gin_ssl"), // 证书缓存目录
+		}
+		// 创建 TLS 配置
+		tlsConfig := &tls.Config{
+			GetCertificate: manager.GetCertificate,
+		}
+		// 创建服务器
+		server := &http.Server{
+			Addr:      ":" + ginPort, // 默认端口":443"
+			Handler:   httpServer,
+			TLSConfig: tlsConfig,
+		}
+		// 启动 HTTP 重定向
+		go func() {
+			err := http.ListenAndServe(":"+ginPort, manager.HTTPHandler(nil))
+			if err != nil {
+				fmt.Println(err)
+			}
+		}()
+		// 启动 HTTPS 服务器
+		err := server.ListenAndServeTLS("", "")
+		if err != nil {
+			fmt.Println("Error: https://127.0.0.1:" + ginPort + " 开启失败，可能是 Gin服务已启用 或 Gin端口冲突 或 SSL出现问题 。")
+			time.Sleep(1 * time.Second)
+			app.Quit() // 服务不能启动就直接退出所有程序（防止重复开启软件）
+		}
+	} else {
+		// 启动
+		err := httpServer.Run(":" + ginPort)
+		if err != nil {
+			fmt.Println("Error: http://127.0.0.1:" + ginPort + " 开启失败，可能是 Gin服务已启用 或 Gin端口冲突 。")
+			time.Sleep(1 * time.Second)
+			app.Quit() // 服务不能启动就直接退出所有程序（防止重复开启软件）
+		}
+	}
 }

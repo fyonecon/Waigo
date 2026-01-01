@@ -65,6 +65,7 @@
                 let mode=res.content.data;
                 theme_model = "";
                 watch_theme_model_data.theme_model = "";
+                document.documentElement.setAttribute('data-mode', func.get_theme_model());
             });
         },
         default_language: function(){

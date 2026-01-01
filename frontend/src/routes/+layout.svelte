@@ -14,9 +14,9 @@
     import Notice from "../parts/Notice.svelte";
     import Alert from "../parts/Alert.svelte";
     import {watch_window} from "../watch_window.js";
-    import {watch_lang_data} from "../stores/watch_lang.store.svelte";
+    import {watch_lang_data} from "../stores/watch_lang.store.svelte.js";
     import config from "../config";
-    import {app_uid_data} from "../stores/app_uid.store.svelte";
+    import {app_uid_data} from "../stores/app_uid.store.svelte.js";
     import SideTab from '../parts/SideTab.svelte';
     import Nav from '../parts/Nav.svelte';
     import Foot from '../parts/Foot.svelte';

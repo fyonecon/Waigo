@@ -6,8 +6,8 @@
     import { afterNavigate, beforeNavigate } from "$app/navigation";
     import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
     import {onMount} from "svelte";
-    import {watch_lang_data} from "../../stores/watch_lang.store.svelte";
-    import {watch_theme_model_data} from "../../stores/watch_theme_model.store.svelte";
+    import {watch_lang_data} from "../../stores/watch_lang.store.svelte.js";
+    import {watch_theme_model_data} from "../../stores/watch_theme_model.store.svelte.js";
 
 
     // 本页面数据

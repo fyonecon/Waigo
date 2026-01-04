@@ -8,7 +8,7 @@ const config = {
     },
     sys:{
         backend: "go", // go、py
-        home_route: "/home" // 主页默认页的路由 “”、"/home”
+        home_route: "/home", // 主页默认页的路由 ""、"/home"
     },
     api: {
         js_call_go_url: "http://127.0.0.1:9850/api/js_call_go", // http(s)://127.0.0.1:9750/api/js_call_py 、http(s)://127.0.0.1:9850/api/js_call_go

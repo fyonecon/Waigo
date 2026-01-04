@@ -8,9 +8,8 @@ const config = {
     },
     sys:{
         backend: "go", // go、py
+        base_route: "", // 等同于svelte.config.js中paths的base "", "/view"，结尾无/
         home_route: "/home", // 主页默认页的路由 ""、"/home"
-        ssr: false, // true，服务端渲染+SEO，js的window将对象不可访问。Wails里面false，Gthon里面随意。
-        csr: true, // true，页面有js，刷新任何页面，页面有js效果。
     },
     api: {
         js_call_go_url: "http://127.0.0.1:9850/api/js_call_go", // http(s)://127.0.0.1:9750/api/js_call_py 、http(s)://127.0.0.1:9850/api/js_call_go

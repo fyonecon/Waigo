@@ -7,16 +7,16 @@ const config = {
 		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		adapter: adapter({
-            pages: 'dist',
-			assets: 'dist',
+            pages: './dist',
+			assets: './dist',
 			fallback: '404.html',
 			precompress: false,
 			strict: true
         }),
 		// 添加路径重写配置
 		paths: {
-			base: '', // 根据你的部署路径设置
-			assets: '' // 根据你的部署路径设置。CDN如：'http://127.0.0.1:9750/view/svelte/dist'，，结尾无/
+			base: '', // 根据你的部署路径设置，''、'/view'、'/view_static'
+			assets: '' // 根据你的部署路径设置。CDN如：'http(s)://127.0.0.1:9750/view/svelte/dist'，，结尾无/
 		},
 	}
 };

@@ -81,6 +81,7 @@ func (gcl *GinController) GetPlayAudioList(ctx *gin.Context) {
 							} else {
 								dirInfo := map[string]interface{}{
 									"name":        entry.Name(),
+									"token":       common.MD5("dir=" + common.URIEncode(_nowDir+"/"+entry.Name())),
 									"size":        "",
 									"create_time": common.FormatTimeToDate("Y/m/d H:i", info.ModTime()),
 								}
@@ -92,6 +93,7 @@ func (gcl *GinController) GetPlayAudioList(ctx *gin.Context) {
 							} else {
 								fileInfo := map[string]interface{}{
 									"name":        entry.Name(),
+									"token":       common.MD5("file=" + common.URIEncode(_nowDir+"/"+entry.Name())),
 									"size":        common.FormatFileSize(info.Size()),
 									"create_time": common.FormatTimeToDate("Y/m/d H:i", info.ModTime()),
 								}
@@ -121,6 +123,7 @@ func (gcl *GinController) GetPlayAudioList(ctx *gin.Context) {
 				if len(thePath) > 0 {
 					fileInfo := map[string]interface{}{
 						"name":        thePath,
+						"token":       "",
 						"size":        "",
 						"create_time": "(Added Folder)",
 					}

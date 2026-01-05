@@ -8,6 +8,7 @@
     import config from "../../config";
     import FetchPOST from "../../common/post.svelte.js";
     import {play_audio_data} from "../../stores/play_audio.store.svelte.js";
+    import {runtime_ok} from "../../common/runtime_ok.svelte.js";
 
     // 本页面参数
     let route = $state(func.get_route());
@@ -433,15 +434,30 @@
     };
 
 
-    // 刷新页面数据
-    afterNavigate(() => {
+    // 检测$state()值变化
+    $effect(() => {
+        //
+    });
+
+
+    // 页面函数执行的入口，实时更新数据
+    function page_start(){
+        if (!runtime_ok()){return;}
+        // 开始
         def.get_local_dir().then(array=>{
             has_paths = array;
         });
         now_audio_files = [];
         def.get_play_audio_list();
         //
+    }
+
+
+    // 刷新页面数据
+    afterNavigate(() => {
+        page_start();
     });
+
 
     // 页面装载完成后，只运行一次
     onMount(() => {
@@ -737,6 +753,7 @@
     .li-name{
         float: left;
         width: calc(100% - 90px - 240px);
+        min-width: 100px;
         overflow: hidden;
     }
     .li-info{

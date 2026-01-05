@@ -2,7 +2,7 @@
 ```text
 Waigo基于Wails3、Ginvel3等。Apache License。
 
-前端默认Svelte。
+前端默认Svelte5。
 
 （方+——爬说明，仅在Git——-h>ub发布，20251205）
 

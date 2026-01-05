@@ -932,7 +932,12 @@ func SysUser() map[string]string {
 func WinPathToMacPath(path string) string {
 	path = URIEncode(path)
 	path = strings.ReplaceAll(path, "%5C", "%2F")
-	return URIDecode(path)
+	path = URIDecode(path)
+	path = strings.ReplaceAll(path, "//", "/")
+	if len(path) >= 2 && path[len(path)-1] == '/' { // 删除最后一位是/，但不包括只有一个/
+		path = path[:len(path)-1]
+	}
+	return path
 }
 
 // MacTheme 获取mac当前的主题色

@@ -48,6 +48,77 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 		//
 		state = 1
 		msg = "Hide"
+	} else if key == "change_window_size" { // data_dict={size_tag: "", width: 0, height: 0}
+		nowScreenInfo, _ := internal.APP.Window.Current().GetScreen() // 获取当前显示器的信息
+		//fmt.Println("change_window_size=", nowScreenInfo, nowScreenInfo.Name, nowScreenInfo.ID, nowScreenInfo.IsPrimary, nowScreenInfo.Size.Width, nowScreenInfo.Size.Height)
+		screenWidth := nowScreenInfo.Size.Width
+		screenHeight := nowScreenInfo.Size.Height
+		// 同init_window参数
+		initWidth := 960
+		initHeight := 700
+		//
+		width := 0
+		height := 0
+		sizeTag := dataDict["size_tag"]
+		if sizeTag == "size_init" {
+			width = initWidth
+			height = initHeight
+			internal.WINDOW.SetSize(width, height)
+			// 居中
+			//x := 0
+			//y := 0
+			//internal.WINDOW.SetPosition(x, y)
+			internal.WINDOW.Center()
+		} else if sizeTag == "size_full_height" {
+			width = screenWidth / 3 * 2
+			if width < initWidth {
+				width = initWidth
+			}
+			height = screenHeight
+			internal.WINDOW.SetSize(width, height)
+			// 居中
+			//x := (screenWidth - width) / 2
+			//y := 0
+			//internal.WINDOW.SetPosition(x, y)
+			internal.WINDOW.Center()
+		} else if sizeTag == "size_full_window" {
+			width = screenWidth
+			height = screenHeight
+			internal.WINDOW.SetSize(width, height)
+			// 居中
+			//x := 0
+			//y := 0
+			//internal.WINDOW.SetPosition(x, y)
+			internal.WINDOW.Center()
+		} else if sizeTag == "size_full_screen" {
+			internal.WINDOW.Fullscreen()
+		} else if sizeTag == "size_center" {
+			internal.WINDOW.Center()
+		} else {
+			// 自定义尺寸
+			width = int(common.InterfaceToInt(dataDict["width"]))
+			height = int(common.InterfaceToInt(dataDict["height"]))
+			// 校验
+			if width < 320 || width > screenWidth {
+				width = screenWidth
+			}
+			if height < 320 || height > screenHeight {
+				height = screenHeight
+			}
+			internal.WINDOW.SetSize(width, height)
+			// 居中
+			//x := (screenWidth - width) / 2
+			//y := (screenHeight - height) / 2
+			//internal.WINDOW.SetPosition(x, y)
+			internal.WINDOW.Center()
+		}
+
+		//
+		state = 1
+		msg = "Size"
+		content["size_tag"] = sizeTag
+		content["window_size"] = []int{width, height}
+		content["screen_size"], _ = internal.WINDOW.Size()
 	} else if key == "window_title" { // data_dict={title:""}
 		title := common.InterfaceToString(dataDict["title"])
 		maxLen := 8

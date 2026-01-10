@@ -44,7 +44,7 @@ func (ld *LocalDB) LocalDBSetData(dataKey string, dataValue string, dataTimeoutS
 	if err != nil {
 		return ""
 	}
-	return theValue
+	return dataValue
 }
 
 // LocalDBGetData 获取

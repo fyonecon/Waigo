@@ -3,7 +3,6 @@
 package common
 
 import (
-	"bytes"
 	"crypto/md5"
 	"datathink.top/Waigo/internal"
 	kits "datathink.top/Waigo/internal/common/kits"
@@ -18,7 +17,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"os/exec"
 	"os/user"
 	"path"
 	"path/filepath"
@@ -202,7 +200,7 @@ func DownloadFile(saveDir string, fileURL string, filename string) error {
 
 // GetFileFatherDirName 获取文件/文件夹所在的父级文件夹路径
 func GetFileFatherDirName(file string) string {
-	file = WinPathToMacPath(file)
+	file = ConvertedPath(file)
 	file = strings.TrimRight(file, "/") // 删除最后一位是/
 	//
 	sep := "/"
@@ -220,7 +218,7 @@ func GetFileFatherDirName(file string) string {
 
 // GetFileLastDirName 获取文件/文件夹最后一个文件夹或文件的名称
 func GetFileLastDirName(file string) string {
-	file = WinPathToMacPath(file)
+	file = ConvertedPath(file)
 	file = strings.TrimRight(file, "/") // 删除最后一位是/
 	//
 	sep := "/"
@@ -260,41 +258,41 @@ func IsFile(path string) bool {
 
 // MoveFile 移动文件或重命名文件
 func MoveFile(oldFile string, newFile string) error {
-	oldFile = WinPathToMacPath(oldFile)
-	newFile = WinPathToMacPath(newFile)
+	oldFile = ConvertedPath(oldFile)
+	newFile = ConvertedPath(newFile)
 	return os.Rename(oldFile, newFile)
 }
 
 // MoveDir 移动文件夹或重命名文件夹
 func MoveDir(oldDir string, newDir string) error {
-	oldDir = WinPathToMacPath(oldDir)
-	newDir = WinPathToMacPath(newDir)
+	oldDir = ConvertedPath(oldDir)
+	newDir = ConvertedPath(newDir)
 	return os.Rename(oldDir, newDir)
 }
 
 // RenameFile 移动文件或重命名文件
 func RenameFile(oldFile string, newFile string) error {
-	oldFile = WinPathToMacPath(oldFile)
-	newFile = WinPathToMacPath(newFile)
+	oldFile = ConvertedPath(oldFile)
+	newFile = ConvertedPath(newFile)
 	return os.Rename(oldFile, newFile)
 }
 
 // RenameDir 移动文件夹或重命名文件夹
 func RenameDir(oldDir string, newDir string) error {
-	oldDir = WinPathToMacPath(oldDir)
-	newDir = WinPathToMacPath(newDir)
+	oldDir = ConvertedPath(oldDir)
+	newDir = ConvertedPath(newDir)
 	return os.Rename(oldDir, newDir)
 }
 
 // DelFile 删除文件
 func DelFile(oldFile string) error {
-	oldFile = WinPathToMacPath(oldFile)
+	oldFile = ConvertedPath(oldFile)
 	return os.Remove(oldFile)
 }
 
 // DelDir 删除文件夹
 func DelDir(oldDir string) error {
-	oldDir = WinPathToMacPath(oldDir)
+	oldDir = ConvertedPath(oldDir)
 	return os.RemoveAll(oldDir)
 }
 
@@ -303,8 +301,8 @@ func DelDir(oldDir string) error {
 // newPath 新路径，以/结尾
 // newFilename 新文件名，只需要文件名
 func CopyFile(oldFile string, newFile string) error {
-	oldFile = WinPathToMacPath(oldFile)
-	newFile = WinPathToMacPath(newFile)
+	oldFile = ConvertedPath(oldFile)
+	newFile = ConvertedPath(newFile)
 	// 创建新文件夹
 	if !IsDir(GetFileFatherDirName(newFile)) {
 		_, err := MakeDir(newFile)
@@ -353,8 +351,8 @@ func CopyFile(oldFile string, newFile string) error {
 
 // CopyDir 复制文件夹
 func CopyDir(oldDirPath string, newDirPath string) error {
-	oldDirPath = WinPathToMacPath(oldDirPath)
-	newDirPath = WinPathToMacPath(newDirPath)
+	oldDirPath = ConvertedPath(oldDirPath)
+	newDirPath = ConvertedPath(newDirPath)
 	// 检查目录是否正确
 	if IsDir(oldDirPath) {
 		if !IsDir(newDirPath) { // 无新路径就直接创建
@@ -810,13 +808,13 @@ func Base64Decode(str string) string {
 	}
 }
 
-// URIEncode URI加密，大写
-func URIEncode(uri string) string {
+// URLEncode URI加密，大写
+func URLEncode(uri string) string {
 	return strings.ReplaceAll(url.QueryEscape(uri), "+", "%20") // 已js的空格转换为标准
 }
 
-// URIDecode URI解密
-func URIDecode(uri string) string {
+// URLDecode URI解密
+func URLDecode(uri string) string {
 	res, err := url.QueryUnescape(uri)
 	if err != nil {
 		return ""
@@ -904,8 +902,8 @@ func GetHostIPv4() string {
 	return host
 }
 
-// SysUser 获取电脑本机的用名
-func SysUser() map[string]string {
+// ComputerUser 获取电脑本机的用名
+func ComputerUser() map[string]string {
 	info, _ := user.Current()
 	nickname := info.Name
 	username := info.Username
@@ -913,7 +911,7 @@ func SysUser() map[string]string {
 	dir := info.HomeDir
 
 	if len(username) > 0 {
-		username = WinPathToMacPath(username)
+		username = ConvertedPath(username)
 		array := strings.Split(username, "/")
 		if len(array) >= 2 { // win
 			username = array[1]
@@ -928,11 +926,11 @@ func SysUser() map[string]string {
 	}
 }
 
-// WinPathToMacPath win下\转/，win兼容mac的path，统一转成mac path
-func WinPathToMacPath(path string) string {
-	path = URIEncode(path)
+// ConvertedPath win下\转/，win兼容mac的path，统一转成mac path
+func ConvertedPath(path string) string {
+	path = URLEncode(path)
 	path = strings.ReplaceAll(path, "%5C", "%2F")
-	path = URIDecode(path)
+	path = URLDecode(path)
 	path = strings.ReplaceAll(path, "//", "/")
 	if len(path) >= 2 && path[len(path)-1] == '/' { // 删除最后一位是/，但不包括只有一个/
 		path = path[:len(path)-1]
@@ -941,24 +939,24 @@ func WinPathToMacPath(path string) string {
 }
 
 // MacTheme 获取mac当前的主题色
-func MacTheme() string {
-	dm := exec.Command("osascript", "-e", `tell application "System Events"`, "-e", `tell appearance preferences`, "-e", `return dark mode`, "-e", `end tell`, "-e", `end tell`)
-	var out bytes.Buffer
-	dm.Stdout = &out
-
-	err := dm.Run()
-	if err != nil { // 默认dark
-		return "dark"
-	}
-
-	if strings.TrimSpace(out.String()) == "false" { // light
-		return "light"
-	} else if strings.TrimSpace(out.String()) == "true" { // dark
-		return "dark"
-	} else {
-		return "dark"
-	}
-}
+//func MacTheme() string {
+//	dm := exec.Command("osascript", "-e", `tell application "System Events"`, "-e", `tell appearance preferences`, "-e", `return dark mode`, "-e", `end tell`, "-e", `end tell`)
+//	var out bytes.Buffer
+//	dm.Stdout = &out
+//
+//	err := dm.Run()
+//	if err != nil { // 默认dark
+//		return "dark"
+//	}
+//
+//	if strings.TrimSpace(out.String()) == "false" { // light
+//		return "light"
+//	} else if strings.TrimSpace(out.String()) == "true" { // dark
+//		return "dark"
+//	} else {
+//		return "dark"
+//	}
+//}
 
 // CycleEventStateXXi00s 返回周期时间是否已经达到，"is"，每小时的第i分钟运行一次。周期10s刷新。
 // 周期数：每分钟、每小时。

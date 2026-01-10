@@ -28,9 +28,9 @@ func (agn *AppGin) RouteFile(route *gin.Engine, ginHTML fs.FS, ginFiles fs.FS) {
 	group2 := route.Group("/dir", mdw.HttpCorsFiles, mdw.HttpError500, at.CheckAppToken)
 	group2.GET("/play_audio/*filepath", func(ctx *gin.Context) {
 		filepath := ctx.Param("filepath")
-		filepath = common.WinPathToMacPath(filepath)
+		filepath = common.ConvertedPath(filepath)
 		//
-		fileTokenState := common.RequestInput(ctx, "file_token") == common.MD5("file="+common.URIEncode(filepath))
+		fileTokenState := common.RequestInput(ctx, "file_token") == common.MD5("file="+common.URLEncode(filepath))
 		//
 		_apiURL := common.RequestFullURL(ctx) // 完整访问域名
 		whiteHosts := internal.GetConfigMap("gin", "whiteHosts")

@@ -31,7 +31,7 @@ func (ld *LocalDB) LocalDBSetData(dataKey string, dataValue string, dataTimeoutS
 	//
 	theTimer := ldf.GetTimeS() + dataTimeoutS // 截止日期
 	//
-	theValue := ldf.URIEncode(dataKey) + "\n" + ldf.IntToString(theTimer) + "\n" + secret.StringEncode(dataValue, CodeKey) // 写入3行内容
+	theValue := ldf.URLEncode(dataKey) + "\n" + ldf.IntToString(theTimer) + "\n" + secret.StringEncode(dataValue, CodeKey) // 写入3行内容
 	// 无文件夹就创建
 	if !ldf.IsDir(_theFilepath) {
 		_, err := ldf.MakeDir(_theFilepath)
@@ -69,7 +69,7 @@ func (ld *LocalDB) LocalDBGetData(dataKey string) (string, int64) {
 			// 按换行符分割
 			lines := strings.Split(string(content), "\n")
 			if len(lines) == 3 {
-				//_key := common.URIDecode(lines[0])
+				//_key := common.URLDecode(lines[0])
 				_timeoutS := ldf.StringToInt(lines[1])
 				_value := lines[2]
 				if nowTime <= _timeoutS { // 有效
@@ -126,11 +126,11 @@ func (ldf *LocalDBFunc) InterfaceToString(value interface{}) string {
 	return fmt.Sprintf("%v", value)
 }
 
-// WinPathToMacPath win下\转/，win兼容mac的path，统一转成mac path
-func (ldf *LocalDBFunc) WinPathToMacPath(path string) string {
-	path = ldf.URIEncode(path)
+// ConvertedPath win下\转/，win兼容mac的path，统一转成mac path
+func (ldf *LocalDBFunc) ConvertedPath(path string) string {
+	path = ldf.URLEncode(path)
 	path = strings.ReplaceAll(path, "%5C", "%2F")
-	return ldf.URIDecode(path)
+	return ldf.URLDecode(path)
 }
 
 // IsDir 是目录
@@ -149,7 +149,7 @@ func (ldf *LocalDBFunc) IsFile(path string) bool {
 
 // DelFile 删除文件
 func (ldf *LocalDBFunc) DelFile(oldFile string) error {
-	oldFile = ldf.WinPathToMacPath(oldFile)
+	oldFile = ldf.ConvertedPath(oldFile)
 	return os.Remove(oldFile)
 }
 
@@ -180,13 +180,13 @@ func (ldf *LocalDBFunc) GetTimeS() int64 {
 	return time.Now().Unix()
 }
 
-// URIEncode URI加密，大写
-func (ldf *LocalDBFunc) URIEncode(uri string) string {
+// URLEncode URI加密，大写
+func (ldf *LocalDBFunc) URLEncode(uri string) string {
 	return strings.ReplaceAll(url.QueryEscape(uri), "+", "%20") // 已js的空格转换为标准
 }
 
-// URIDecode URI解密
-func (ldf *LocalDBFunc) URIDecode(uri string) string {
+// URLDecode URI解密
+func (ldf *LocalDBFunc) URLDecode(uri string) string {
 	res, err := url.QueryUnescape(uri)
 	if err != nil {
 		return ""

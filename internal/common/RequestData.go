@@ -31,6 +31,8 @@ func RequestFullURL(ctx *gin.Context) string {
 
 // RequestInput 万能获取请求参数
 func RequestInput(ctx *gin.Context, key string) string {
+	rdf := RequestDataFunc{}
+
 	// 1. 路由参数
 	if value := ctx.Param(key); value != "" && value != "/" {
 		return strings.TrimPrefix(value, "/")
@@ -44,7 +46,7 @@ func RequestInput(ctx *gin.Context, key string) string {
 	// 3. 处理 JSON 请求
 	contentType := ctx.ContentType()
 	if strings.Contains(contentType, "application/json") {
-		return getJSONInput(ctx, key)
+		return rdf.getJSONInput(ctx, key)
 	}
 
 	// 4. 表单数据
@@ -63,14 +65,18 @@ func RequestInput(ctx *gin.Context, key string) string {
 	return ""
 }
 
-func getJSONInput(ctx *gin.Context, key string) string {
+// RequestDataFunc 辅助函数
+type RequestDataFunc struct {
+}
+
+func (rdf *RequestDataFunc) getJSONInput(ctx *gin.Context, key string) string {
 	// 使用缓存避免重复解析
 	const cacheKey = "_parsed_json_body"
 
 	// 检查缓存
 	if cached, exists := ctx.Get(cacheKey); exists {
 		if bodyMap, ok := cached.(map[string]interface{}); ok {
-			return extractValue(bodyMap, key)
+			return rdf.extractValue(bodyMap, key)
 		}
 	}
 
@@ -98,17 +104,17 @@ func getJSONInput(ctx *gin.Context, key string) string {
 	ctx.Set(cacheKey, requestBody)
 
 	// 提取值
-	return extractValue(requestBody, key)
+	return rdf.extractValue(requestBody, key)
 }
 
-func extractValue(data map[string]interface{}, key string) string {
+func (rdf *RequestDataFunc) extractValue(data map[string]interface{}, key string) string {
 	if data == nil {
 		return ""
 	}
 
 	// 直接查找
 	if value, exists := data[key]; exists {
-		return formatValue(value)
+		return rdf.formatValue(value)
 	}
 
 	// 嵌套查找 (user.name)
@@ -128,13 +134,13 @@ func extractValue(data map[string]interface{}, key string) string {
 			}
 		}
 
-		return formatValue(current)
+		return rdf.formatValue(current)
 	}
 
 	return ""
 }
 
-func formatValue(v interface{}) string {
+func (rdf *RequestDataFunc) formatValue(v interface{}) string {
 	if v == nil {
 		return ""
 	}
@@ -158,8 +164,8 @@ func formatValue(v interface{}) string {
 		return fmt.Sprintf("%v", val)
 	default:
 		// 对于数组和对象，返回 JSON 字符串
-		if bytes, err := json.Marshal(val); err == nil {
-			return string(bytes)
+		if _bytes, err := json.Marshal(val); err == nil {
+			return string(_bytes)
 		}
 		// 如果 JSON 转换失败，返回空字符串而不是 Go 的 map 字符串
 		return ""

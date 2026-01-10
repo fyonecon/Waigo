@@ -15,7 +15,7 @@ func (gcl *GinController) SpiderITHome(ctx *gin.Context) {
 		"news_index":   0,
 		"news_id":      0,
 		"news_href":    "",
-		"news_title":   common.URIEncode(""),
+		"news_title":   common.URLEncode(""),
 		"news_time":    "",
 		"comments_num": 0,
 	}

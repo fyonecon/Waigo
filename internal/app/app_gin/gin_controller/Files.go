@@ -33,7 +33,7 @@ func (gcl *GinController) UploadFile(ctx *gin.Context) {
 			//fileType := file.Header["Content-Type"][0]
 			filePath := strings.ReplaceAll(file.Header["Content-Disposition"][0], `form-data; name="file"; filename="`, "") // 可以上传整个目录
 			filePath = strings.ReplaceAll(filePath, `"`, "")
-			filePath = common.WinPathToMacPath(filePath)
+			filePath = common.ConvertedPath(filePath)
 			// 保存文件的绝对路径
 			savePath := localFilesDir + "/" + filePath
 			//fmt.Println("单个文件信息：", fileType, savePath)

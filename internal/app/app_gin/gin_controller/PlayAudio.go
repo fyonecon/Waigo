@@ -47,7 +47,7 @@ func (gcl *GinController) GetRootPath(nowDir string) string {
 // GetPlayAudioList 获取音频文件播放列表
 func (gcl *GinController) GetPlayAudioList(ctx *gin.Context) {
 	_nowDir := common.RequestInput(ctx, "now_dir")
-	_nowDir = common.WinPathToMacPath(_nowDir)
+	_nowDir = common.ConvertedPath(_nowDir)
 
 	// 目标地址
 	var listDirs []map[string]interface{}
@@ -81,7 +81,7 @@ func (gcl *GinController) GetPlayAudioList(ctx *gin.Context) {
 							} else {
 								dirInfo := map[string]interface{}{
 									"name":        entry.Name(),
-									"token":       common.MD5("dir=" + common.URIEncode(_nowDir+"/"+entry.Name())),
+									"token":       common.MD5("dir=" + common.URLEncode(_nowDir+"/"+entry.Name())),
 									"size":        "",
 									"create_time": common.FormatTimeToDate("Y/m/d H:i", info.ModTime()),
 								}
@@ -93,7 +93,7 @@ func (gcl *GinController) GetPlayAudioList(ctx *gin.Context) {
 							} else {
 								fileInfo := map[string]interface{}{
 									"name":        entry.Name(),
-									"token":       common.MD5("file=" + common.URIEncode(_nowDir+"/"+entry.Name())),
+									"token":       common.MD5("file=" + common.URLEncode(_nowDir+"/"+entry.Name())),
 									"size":        common.FormatFileSize(info.Size()),
 									"create_time": common.FormatTimeToDate("Y/m/d H:i", info.ModTime()),
 								}

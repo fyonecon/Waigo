@@ -27,7 +27,7 @@ func MakeRandToken(salt string, timeoutS int64) string {
 	//
 	token := appClass + "#@" + _salt + "#@" + IntToString(_nowTimeMS) + "#@" + IntToString(_timeoutMS) + "#@" + GoRandString(12, 18)
 	//
-	return URIEncode(secret.StringEncode(token, _key))
+	return URLEncode(secret.StringEncode(token, _key))
 }
 
 // CheckRandToken 检查Token
@@ -44,7 +44,7 @@ func CheckRandToken(salt string, checkString string) bool {
 	}
 	secret := kits.Secret{}
 	//
-	token := secret.StringDecode(URIDecode(checkString), _key)
+	token := secret.StringDecode(URLDecode(checkString), _key)
 	tokenArray := strings.Split(token, "#@")
 	if len(tokenArray) >= 5 {
 		//fmt.Println("CheckRandToken=", token)

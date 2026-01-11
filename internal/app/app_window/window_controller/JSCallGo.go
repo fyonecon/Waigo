@@ -162,7 +162,7 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 			_timeoutS = 5 * 60
 		}
 		db := kits.LocalDB{}
-		data := db.LocalDBSetData(_key, _value, _timeoutS)
+		data := db.SetData(_key, _value, _timeoutS)
 		//
 		state = 1
 		msg = "OK"
@@ -170,7 +170,7 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 	} else if key == "get_data" { // 读取本地数据。 data_dict={data_key:""}
 		db := kits.LocalDB{}
 		_key := common.InterfaceToString(dataDict["data_key"])
-		_value, _state := db.LocalDBGetData(_key)
+		_value, _state := db.GetData(_key)
 		//
 		if _state == -1 {
 			state = 0
@@ -185,7 +185,7 @@ func (wct *WindowController) ListJSCallGo(key string, dataDict map[string]interf
 		_key := common.InterfaceToString(dataDict["data_key"])
 		//
 		db := kits.LocalDB{}
-		_state := db.LocalDBDelData(_key)
+		_state := db.DelData(_key)
 		if _state == -1 {
 			state = 0
 			msg = "No file"

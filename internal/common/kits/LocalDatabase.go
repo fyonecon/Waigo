@@ -14,13 +14,15 @@ import (
 	"time"
 )
 
+// 本地KV数据库（数据永久保存）
+
 type LocalDB struct{}
 
 const CodeKey string = "fyWaiG05" // 8位
 const CodeSalt string = "2025"
 
-// LocalDBSetData 新增或更新
-func (ld *LocalDB) LocalDBSetData(dataKey string, dataValue string, dataTimeoutS int64) string {
+// SetData 新增或更新
+func (ld *LocalDB) SetData(dataKey string, dataValue string, dataTimeoutS int64) string {
 	ldf := LocalDBFunc{}
 	var LocalPath string = ldf.DataPath() + "/" + ldf.InterfaceToString(internal.GetConfigMap("sys", "dataPath"))
 
@@ -47,9 +49,9 @@ func (ld *LocalDB) LocalDBSetData(dataKey string, dataValue string, dataTimeoutS
 	return dataValue
 }
 
-// LocalDBGetData 获取
+// GetData 获取
 // 1有文件，-1无文件
-func (ld *LocalDB) LocalDBGetData(dataKey string) (string, int64) {
+func (ld *LocalDB) GetData(dataKey string) (string, int64) {
 	ldf := LocalDBFunc{}
 	var LocalPath string = ldf.DataPath() + "/" + ldf.InterfaceToString(internal.GetConfigMap("sys", "dataPath"))
 
@@ -75,7 +77,7 @@ func (ld *LocalDB) LocalDBGetData(dataKey string) (string, int64) {
 				if nowTime <= _timeoutS { // 有效
 					return secret.StringDecode(_value, CodeKey), 1
 				} else { // 过期
-					return "", ld.LocalDBDelData(dataKey) // 删除文件
+					return "", ld.DelData(dataKey) // 删除文件
 				}
 			} else {
 				return "", -1
@@ -86,9 +88,9 @@ func (ld *LocalDB) LocalDBGetData(dataKey string) (string, int64) {
 	}
 }
 
-// LocalDBDelData 删除该DB文件
+// DelData 删除该DB文件
 // 1有文件，-1无文件
-func (ld *LocalDB) LocalDBDelData(dataKey string) int64 {
+func (ld *LocalDB) DelData(dataKey string) int64 {
 	ldf := LocalDBFunc{}
 	var LocalPath string = ldf.DataPath() + "/" + ldf.InterfaceToString(internal.GetConfigMap("sys", "dataPath"))
 

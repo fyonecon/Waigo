@@ -14,8 +14,8 @@ func GetConfigMap(group string, key string) interface{} {
 	//
 	var inter = ConfigMap[group]
 	if inter != nil {
-		config := inter.(map[string]interface{}) // interface转map
-		return config[key]
+		_map := inter.(map[string]interface{}) // interface转map
+		return _map[key]
 	} else {
 		return nil
 	}

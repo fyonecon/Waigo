@@ -11,4 +11,9 @@ func (asv *AppServices) StartTimeInterval(timeIntervalNum int64) {
 	// GoRunJS
 	//wct := window_controller.WindowController{}
 	//wct.ListGoRunJS("make_window_token", map[string]interface{}{})
+
+	// 系统信息
+	//lsi := kits.LocalSYSInfo{}
+	//fmt.Println("当前系统信息：", lsi.GetSYSInfo())
+
 }

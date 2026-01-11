@@ -1102,3 +1102,45 @@ func FormatFileSize(bytes int64) string {
 	format := "%.2f %s"
 	return fmt.Sprintf(format, value, units[exp])
 }
+
+// GetTranslate 获取翻译
+func GetTranslate(key string, lang string) string {
+	if len(key) == 0 {
+		key = "_null"
+	}
+	if len(lang) == 0 {
+		// 获取系统语言
+		lsi := kits.LocalSYSInfo{}
+		_lang := lsi.GetSYSInfo()["language"]
+		_lang = strings.ToLower(_lang)
+		if StringHasString(_lang, "zh") == 0 { // 简体中文（不区分繁体）
+			lang = "zh"
+		} else if StringHasString(_lang, "en") == 0 { // 英文
+			lang = "en"
+		} else if StringHasString(_lang, "jp") == 0 { // 日语
+			lang = "jp"
+		} else if StringHasString(_lang, "fr") == 0 { // 法语
+			lang = "fr"
+		} else if StringHasString(_lang, "de") == 0 { // 德语
+			lang = "de"
+		} else if StringHasString(_lang, "ru") == 0 { // 俄语或乌克兰语
+			lang = "ru"
+		} else if StringHasString(_lang, "es") == 0 { // 西班牙语
+			lang = "es"
+		} else if StringHasString(_lang, "vi") == 0 { // 越南语
+			lang = "vi"
+		} else { // 默认英文
+			lang = "en"
+		}
+	}
+	//
+	var inter = LangDict[key]
+	if inter != nil {
+		_map := inter.(map[string]interface{}) // interface转map
+		return InterfaceToString(_map[lang])
+	} else {
+		inter = LangDict["_null"]
+		_map := inter.(map[string]interface{}) // interface转map
+		return InterfaceToString(_map["en"])
+	}
+}

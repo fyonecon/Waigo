@@ -1,6 +1,6 @@
 package kits
 
-// 设置一个会过期的临时数据（软件开启时）
+// 设置一个会过期的临时数据（软件开启时，软件关闭数据消失）
 
 import (
 	"fmt"
@@ -15,10 +15,10 @@ var cacheDataGap int64 = 2 // s，最小有效时间
 
 var cacheDataPrefix string = "waigo_" // 前缀
 
-// SetCacheData 新增一个数据
+// SetData 新增一个数据
 // key 要具有唯一性，timeout单位s（ >= cacheDataGap s）
-func (cd *CacheData) SetCacheData(key string, mapData map[string]interface{}, timeout int64) bool {
-	cdf := CacheDataFuncs{}
+func (cd *CacheData) SetData(key string, mapData map[string]interface{}, timeout int64) bool {
+	cdf := CacheDataFunc{}
 
 	if timeout < cacheDataGap { // s
 		timeout = cacheDataGap
@@ -31,9 +31,9 @@ func (cd *CacheData) SetCacheData(key string, mapData map[string]interface{}, ti
 	return true
 }
 
-// GetCacheData 查询一个数据
-func (cd *CacheData) GetCacheData(key string) (bool, map[string]interface{}) {
-	cdf := CacheDataFuncs{}
+// GetData 查询一个数据
+func (cd *CacheData) GetData(key string) (bool, map[string]interface{}) {
+	cdf := CacheDataFunc{}
 
 	// 读取数据
 	oldMap := cdf.GetConfigSetter(key + "_cache_data")
@@ -48,35 +48,35 @@ func (cd *CacheData) GetCacheData(key string) (bool, map[string]interface{}) {
 	if _nowTime > cacheTime || cacheTime < cacheDataGap*1000 { // 过期
 		_oldMap = map[string]interface{}{}
 		state = false
-		cd.DelCacheData(key)
+		cd.DelData(key)
 	}
 
 	return state, _oldMap
 }
 
-// DelCacheData 删除一个数据
-func (cd *CacheData) DelCacheData(key string) bool {
-	cdf := CacheDataFuncs{}
+// DelData 删除一个数据
+func (cd *CacheData) DelData(key string) bool {
+	cdf := CacheDataFunc{}
 
 	return cdf.DelConfigSetter(key+"_cache_data") && cdf.DelConfigSetter(key+"_cache_time")
 }
 
 //==================================================
 
-type CacheDataFuncs struct{}
+type CacheDataFunc struct{}
 
 // map[string]interface{} 全局配置（自定义）参数。读写
 var syncMapInterface sync.Map
 
 // SetConfigSetter 新增或更新
-func (cdf *CacheDataFuncs) SetConfigSetter(key string, value interface{}) interface{} {
+func (cdf *CacheDataFunc) SetConfigSetter(key string, value interface{}) interface{} {
 	//
 	syncMapInterface.Store(cacheDataPrefix+key, value)
 	return value
 }
 
 // GetConfigSetter 读取
-func (cdf *CacheDataFuncs) GetConfigSetter(key string) interface{} {
+func (cdf *CacheDataFunc) GetConfigSetter(key string) interface{} {
 	//
 	back, ok := syncMapInterface.Load(cacheDataPrefix + key)
 	if ok {
@@ -87,7 +87,7 @@ func (cdf *CacheDataFuncs) GetConfigSetter(key string) interface{} {
 }
 
 // DelConfigSetter 删除
-func (cdf *CacheDataFuncs) DelConfigSetter(key string) bool {
+func (cdf *CacheDataFunc) DelConfigSetter(key string) bool {
 	//
 	syncMapInterface.Delete(cacheDataPrefix + key)
 	_, ok := syncMapInterface.Load(cacheDataPrefix + key)
@@ -99,14 +99,14 @@ func (cdf *CacheDataFuncs) DelConfigSetter(key string) bool {
 }
 
 // GetTimeMS 获取毫秒时间戳，ms
-func (cdf *CacheDataFuncs) GetTimeMS() int64 {
+func (cdf *CacheDataFunc) GetTimeMS() int64 {
 	timer := time.Now()
 	timeMS := int64(timer.UnixNano() / 1e6)
 	return timeMS
 }
 
 // InterfaceToMap interface{}转map[string]interface{}
-func (cdf *CacheDataFuncs) InterfaceToMap(inter interface{}) map[string]interface{} {
+func (cdf *CacheDataFunc) InterfaceToMap(inter interface{}) map[string]interface{} {
 	if inter == nil {
 		return nil
 	} else {
@@ -115,12 +115,12 @@ func (cdf *CacheDataFuncs) InterfaceToMap(inter interface{}) map[string]interfac
 }
 
 // InterfaceToInt interface{}，类似ValueInterfaceToInt
-func (cdf *CacheDataFuncs) InterfaceToInt(value interface{}) int64 {
+func (cdf *CacheDataFunc) InterfaceToInt(value interface{}) int64 {
 	return cdf.StringToInt(fmt.Sprintf("%v", value))
 }
 
 // StringToInt string转int
-func (cdf *CacheDataFuncs) StringToInt(_str string) int64 {
+func (cdf *CacheDataFunc) StringToInt(_str string) int64 {
 	_int, err := strconv.ParseInt(_str, 10, 64) // string转int
 	if err != nil {
 		_int = 0

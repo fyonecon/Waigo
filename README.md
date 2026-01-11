@@ -10,7 +10,7 @@ Waigo基于Wails3、Ginvel3等。ApacheV2 License。
 
 ```
 
-### 老一辈艺术家坚持手搓
+### 老一辈艺术家坚持手搓：
 
 Python版基座请戳：https://github.com/fyonecon/Ginthon 。
 

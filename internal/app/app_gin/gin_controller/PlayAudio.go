@@ -13,7 +13,7 @@ import (
 func (gcl *GinController) GetRootPath(nowDir string) string {
 	playAudioListDirKey := "play_audio_list_dirs"
 	db := kits.LocalDB{}
-	_value, _state := db.LocalDBGetData(playAudioListDirKey)
+	_value, _state := db.GetData(playAudioListDirKey)
 	if _state != -1 {
 		//
 		var rootPath string
@@ -116,7 +116,7 @@ func (gcl *GinController) GetPlayAudioList(ctx *gin.Context) {
 	} else {
 		playAudioListDirKey := "play_audio_list_dirs"
 		db := kits.LocalDB{}
-		_value, _state := db.LocalDBGetData(playAudioListDirKey)
+		_value, _state := db.GetData(playAudioListDirKey)
 		if _state != -1 {
 			array := strings.Split(_value, "#@")
 			for _, thePath := range array {

@@ -11,6 +11,7 @@ var LangDict = map[string]interface{}{
 		"de": "",
 		"ru": "",
 		"es": "",
+		"ko": "",
 		"vi": "",
 	},
 	"_null": map[string]string{ // 必须

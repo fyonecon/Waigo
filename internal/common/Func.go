@@ -1127,6 +1127,8 @@ func GetTranslate(key string, lang string) string {
 			lang = "ru"
 		} else if StringHasString(_lang, "es") == 0 { // 西班牙语
 			lang = "es"
+		} else if StringHasString(_lang, "ko") == 0 { // 韩语或朝鲜语
+			lang = "ko"
 		} else if StringHasString(_lang, "vi") == 0 { // 越南语
 			lang = "vi"
 		} else { // 默认英文

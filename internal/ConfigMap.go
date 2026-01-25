@@ -33,10 +33,10 @@ var ConfigMap map[string]interface{} = map[string]interface{}{
 	"sys": map[string]interface{}{
 		"appStateStartTime": 20251201010101,        // 最早时间 YmdHis
 		"appStateEndTime":   20341201010101,        // 截止时间，一个版本：9年。（这是软件及扩展更新的要求）
-		"cachePath":         "top.datathink.Waigo", // 缓存文件夹，结尾无/
-		"dataPath":          "top.datathink.Waigo", // 数据持久化文件夹，结尾无/
-		"dataPathDirsName": []string{
-			"running", "local_database", "gin_ssl", "user", // 必要
+		"cachePathName":     "top.datathink.Waigo", // 缓存文件夹，结尾无/
+		"dataPathName":      "top.datathink.Waigo", // 数据持久化文件夹，结尾无/
+		"dataPathNamesArray": []string{
+			"running", "local_database", "gin_ssl", "user", // 必要目录
 			// 其它
 		},
 	},

@@ -20,7 +20,7 @@ func InitCheckSYS() (int64, string, map[string]interface{}) {
 	}
 
 	// 创建必要目录
-	dataPathDirsName := common.InterfaceToArrayString(internal.GetConfigMap("sys", "dataPathDirsName"))
+	dataPathDirsName := common.InterfaceToArrayString(internal.GetConfigMap("sys", "dataPathNamesArray"))
 	for _, dataPathDirsName := range dataPathDirsName {
 		_state, _fullPath := common.CreateDataDirLevel1(dataPathDirsName)
 		fmt.Println(_state, _fullPath)

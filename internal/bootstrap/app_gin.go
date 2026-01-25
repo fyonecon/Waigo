@@ -222,7 +222,6 @@ func RunGin(app *application.App, window *application.WebviewWindow, ginHTML fs.
 	agn.RouteFile(httpServer, ginHTML, ginFiles)
 
 	if common.InterfaceToString(internal.GetConfigMap("gin", "ssl")) == "ON" {
-		_localDataPath := common.DataPath() + "/" + common.InterfaceToString(internal.GetConfigMap("sys", "dataPath")) // 结尾无/
 
 		// 域名
 		host0 := "localhost"
@@ -231,8 +230,8 @@ func RunGin(app *application.App, window *application.WebviewWindow, ginHTML fs.
 		// 配置自动证书管理器
 		manager := &autocert.Manager{
 			Prompt:     autocert.AcceptTOS,
-			HostPolicy: autocert.HostWhitelist(host0, host1),           // 多个host
-			Cache:      autocert.DirCache(_localDataPath + "/gin_ssl"), // 证书缓存目录
+			HostPolicy: autocert.HostWhitelist(host0, host1),                  // 多个host
+			Cache:      autocert.DirCache(common.GetLocalDataPath("gin_ssl")), // 证书缓存目录
 		}
 		// 创建 TLS 配置
 		tlsConfig := &tls.Config{

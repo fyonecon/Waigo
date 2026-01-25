@@ -25,8 +25,7 @@ func InitCheckSYS() (int64, string, map[string]interface{}) {
 		_state, _fullPath := common.CreateDataDirLevel1(dataPathDirsName)
 		fmt.Println(_state, _fullPath)
 	}
-	_localDataPath := common.DataPath() + "/" + common.InterfaceToString(internal.GetConfigMap("sys", "dataPath")) // 结尾无/
-	fmt.Println("系统必要目录：", _localDataPath, common.IsDir(_localDataPath+"/running"), common.CachePath())
+	fmt.Println("系统必要目录：", common.GetLocalDataPath(""), common.IsDir(common.GetLocalDataPath("running")), common.CachePath())
 
 	// 检查逻辑CPU数量
 	minCPUs := 2 // 个逻辑CPU

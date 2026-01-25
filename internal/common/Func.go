@@ -1070,10 +1070,23 @@ func DataPath() string {
 	}
 }
 
+// GetLocalCachePath 获取本地数据路径，结尾无/
+// cachePathDirName 为必填，请在ConfigMap里面提前配置
+func GetLocalCachePath() string {
+	_localCachePath := CachePath() + "/" + InterfaceToString(internal.GetConfigMap("sys", "cachePath")) // 结尾无/
+	return _localCachePath
+}
+
+// GetLocalDataPath 获取本地数据路径，结尾无/
+// dataPathDirName为必填，请在ConfigMap里面提前配置
+func GetLocalDataPath(dataPathDirName string) string {
+	_localDataPath := DataPath() + "/" + InterfaceToString(internal.GetConfigMap("sys", "dataPath")) // 结尾无/
+	return _localDataPath + "/" + dataPathDirName
+}
+
 // CreateDataDirLevel1 创建必要目录
 func CreateDataDirLevel1(dirName string) (bool, string) {
-	_localDataPath := DataPath() + "/" + InterfaceToString(internal.GetConfigMap("sys", "dataPath")) // 结尾无/
-	fullPath := _localDataPath + "/" + dirName
+	fullPath := GetLocalDataPath(dirName)
 	if !IsDir(fullPath) {
 		_, err := MakeDir(fullPath)
 		if err != nil {

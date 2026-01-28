@@ -1,37 +1,38 @@
 {
-  "name": "frontend",
-  "version": "1.0.1",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "vite dev",
-    "build:dev": "vite build --minify false --mode development",
-    "build": "vite build --mode production",
-    "preview": "vite preview",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch"
-  },
-  "dependencies": {
-    "@wailsio/runtime": "latest",
-    "md5": "^2.3.0",
-    "dexie": "^4.2.1"
-  },
-  "devDependencies": {
-    "@iconify/svelte": "^5.1.0",
-    "@skeletonlabs/skeleton": "^4.8.0",
-    "@skeletonlabs/skeleton-svelte": "^4.8.0",
-    "@skeletonlabs/tw-plugin": "^0.4.1",
-    "@sveltejs/adapter-auto": "^7.0.0",
-    "@sveltejs/adapter-static": "^3.0.10",
-    "@sveltejs/kit": "^2.49.5",
-    "@sveltejs/vite-plugin-svelte": "^6.2.1",
-    "@tailwindcss/vite": "^4.1.17",
-    "autoprefixer": "^10.4.23",
-    "postcss": "^8.5.6",
-    "svelte": "^5.46.4",
-    "svelte-check": "^4.3.4",
-    "tailwindcss": "^4.1.17",
-    "typescript": "^5.9.3",
-    "vite": "^7.2.2"
-  }
+    "name": "frontend",
+    "version": "1.0.1",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite dev",
+        "build:dev": "vite build --minify false --mode development",
+        "build": "vite build --mode production",
+        "preview": "vite preview",
+        "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
+        "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch"
+    },
+    "devDependencies": {
+        "@iconify/svelte": "^5.1.0",
+        "@skeletonlabs/skeleton": "^4.8.0",
+        "@skeletonlabs/skeleton-svelte": "^4.8.0",
+        "@skeletonlabs/tw-plugin": "^0.4.1",
+        "@sveltejs/adapter-auto": "^7.0.0",
+        "@sveltejs/adapter-static": "^3.0.10",
+        "@sveltejs/kit": "^2.49.5",
+        "@sveltejs/vite-plugin-svelte": "^6.2.1",
+        "@tailwindcss/vite": "^4.1.17",
+        "autoprefixer": "^10.4.23",
+        "postcss": "^8.5.6",
+        "svelte": "^5.46.4",
+        "svelte-check": "^4.3.4",
+        "tailwindcss": "^4.1.17",
+        "typescript": "^5.9.3",
+        "vite": "^7.2.2"
+    },
+    "dependencies": {
+        "@wailsio/runtime": "latest",
+        "md5": "^2.3.0",
+        "dexie": "^4.2.1",
+        "qrcode": "^1.5.4"
+    }
 }

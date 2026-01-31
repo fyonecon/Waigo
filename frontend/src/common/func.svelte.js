@@ -138,7 +138,11 @@ const func = {
         let regExp = new RegExp("([?]|&|#)" + key + "=([^&|^#]*)(&|$|#)");
         let result = url_str.match(regExp);
         if (result) {
-            return decodeURIComponent(result[2]); // 转义还原参数
+            try {
+                return decodeURIComponent(result[2]); // 转义还原参数
+            }catch (e) {
+                return result[2];
+            }
         }else {
             return ""; // 没有匹配的键即返回空
         }
